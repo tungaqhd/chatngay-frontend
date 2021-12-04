@@ -27,6 +27,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: rm -rf .prettierrc
     - run: rm -rf .eslintrc
-    - run: npm install
-    - run: npm run build:staging
-    - run: cp -a build/* /home/fe/deploy
+    - run: yarn install
+    - run: npm run build
+    - run: cp -a build/* /home/chatngay/fe/deploy
