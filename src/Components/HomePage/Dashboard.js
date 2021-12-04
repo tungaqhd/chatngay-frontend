@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Sidebar from "./Sidebar";
 import Folder from "./Folder";
 import Content from "./Content";
+import { useHistory } from "react-router";
 
 function Dashboard() {
+  const history = useHistory();
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      return;
+    } else {
+      history.replace("/login");
+    }
+  }, [history]);
   return (
     <Container>
       <Sidebar />
