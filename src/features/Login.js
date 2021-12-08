@@ -51,12 +51,12 @@ const Login = () => {
   const [errorFormLogin, serErrorFormLogin] = useState(null);
   const [isLoadingForm, setIsLoadingForm] = useState(false);
 
-    useEffect(() => {
-      if (localStorage.getItem("token")) {
-        history.replace("/")
-        // dispatch(actions.authentication.setAuthenticated());
-      }
-    }, []);
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      history.replace("/");
+      // dispatch(actions.authentication.setAuthenticated());
+    }
+  }, []);
 
   const submit = async (data, event) => {
     event.preventDefault();
@@ -64,7 +64,7 @@ const Login = () => {
     try {
       setIsLoadingForm(true);
       const userData = await useFetch(
-        `https://api.chatngay.xyz/api/auth/login`,
+        `${process.env.REACT_APP_API_KEY}/auth/login`,
         {
           method: "POST",
           body: JSON.stringify(data),
@@ -73,14 +73,15 @@ const Login = () => {
       setIsLoadingForm(false);
       //   console.log(await userData.json());
       const responseData = await userData.json();
+      console.log(userData.status);
       if (userData.status === StatusCode.SuccessOK) {
         if (!responseData.token) {
-          Swal.fire("Server Error");
+          console.log(responseData);
+          console.log(typeof responseData)
+          Swal.fire("Server Errorr 2");
         } else {
           const { token } = responseData;
-
-          const tokenObjStr = JSON.stringify(token);
-          localStorage.setItem("token", tokenObjStr);
+          localStorage.setItem("token", token);
           history.push("/");
           //   dispatch(actions.authentication.setAuthenticated());
         }
@@ -88,7 +89,8 @@ const Login = () => {
         serErrorFormLogin(responseData.msg);
       }
     } catch (err) {
-      Swal.fire(`Server Error!`);
+      console.log(err.message);
+      Swal.fire(`Server Error! 1`);
     }
   };
 

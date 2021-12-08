@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Swal from "sweetalert2";
-
+import { messageActions } from "../../features/messageSlice";
+import { io } from "socket.io-client";
 import {
   ClockIcon,
   EyeIcon,
@@ -13,22 +14,25 @@ import {
   DotsVerticalIcon,
 } from "@heroicons/react/outline";
 import fetchWithToken from "../../hooks/useFetchToken";
+import { useDispatch } from "react-redux";
 
 function Sidebar() {
   const [profile, setProfile] = useState();
   const [listChat, setListChat] = useState();
-  console.log(profile);
+
+  const dispatch = useDispatch();
   useEffect(() => {
     async function fetchApi() {
       try {
         const resProfile = await fetchWithToken(
-          `https://api.chatngay.xyz/api/user/me`
+          `${process.env.REACT_APP_API_KEY}/user/me`
         );
         const userData = await resProfile.json();
         setProfile(userData);
+        dispatch(messageActions.addProfile(userData));
 
         const resChat = await fetchWithToken(
-          "https://api.chatngay.xyz/api/chat"
+          `${process.env.REACT_APP_API_KEY}/chat`
         );
         const listChat = await resChat.json();
         setListChat(listChat);
@@ -38,9 +42,32 @@ function Sidebar() {
     }
 
     fetchApi();
+  }, [dispatch]);
+
+  useEffect(() => {
+    const socket = io("ws://localhost:5000");
+    if (localStorage.getItem("token")) {
+      const token = localStorage.getItem("token");
+      console.log(token);
+      socket.emit("initChat", token);
+      socket.on("newMessages", (message) => {
+        console.log(message);
+      });
+    }
   }, []);
 
-  console.log(profile);
+  const getChatGroup = async (id, friendId) => {
+    // console.log(id);
+    const res = await fetchWithToken(
+      `${process.env.REACT_APP_API_KEY}/chat/${id}`
+    );
+
+    // console.log(res);
+    const messages = await res.json();
+
+    dispatch(messageActions.addMessage({ messages, friendId }));
+  };
+
   return (
     <Container>
       <Left>
@@ -78,7 +105,7 @@ function Sidebar() {
           if (chat.user1[0]._id === profile._id) {
             const { avatar, username, isOnline, _id } = chat.user2[0];
             return (
-              <Card key={_id}>
+              <Card key={_id} onClick={() => getChatGroup(chat._id, _id)}>
                 <img
                   src={`https://api.chatngay.xyz/avatars/${avatar}`}
                   alt="user"
@@ -93,7 +120,7 @@ function Sidebar() {
           } else {
             const { avatar, username, isOnline, _id } = chat.user1[0];
             return (
-              <Card key={_id}>
+              <Card key={_id} onClick={() => getChatGroup(chat._id, _id)}>
                 <img
                   src={`https://api.chatngay.xyz/avatars/${avatar}`}
                   alt="user"

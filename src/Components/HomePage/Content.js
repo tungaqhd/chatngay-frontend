@@ -1,11 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { PaperAirplaneIcon } from "@heroicons/react/solid";
 import Message from "../Message";
-import MessagePic from "../MessagePic";
-import MessageFolder from "../MessageFolder";
+// import MessagePic from "../MessagePic";
+// import MessageFolder from "../MessageFolder";
+import { useSelector } from "react-redux";
+import { selectMessage, friendIdMessage } from "../../features/messageSlice";
+import fetchWithToken from "../../hooks/useFetchToken";
 
 function Content() {
+  const messages = useSelector(selectMessage);
+  const friendId = useSelector(friendIdMessage);
+  const [chat, setChat] = useState();
+
+  const sendMessage = async (e) => {
+    e.preventDefault();
+    if (!chat.trim()) return;
+
+    const chatData = {
+      msgType: "text",
+      content: chat,
+    };
+    await fetchWithToken(`${process.env.REACT_APP_API_KEY}/chat/${friendId}`, {
+      method: "POST",
+      body: JSON.stringify({ data: chatData }),
+    });
+  };
+
+  const typeMessageHandler = (e) => {
+    setChat(e.target.value);
+  };
   return (
     <Container>
       <ChatBox>
@@ -15,15 +39,20 @@ function Content() {
           <span>Participants</span>
         </Title>
         <div className="message">
-          <Message />
+          {messages?.map((message) => {
+            if (message.msgType === "text") {
+              return <Message key={message._id} message={message} />;
+            }
+          })}
+          {/* <Message />
           <Message />
           <Message />
           <MessagePic />
-          <MessageFolder />
+          <MessageFolder /> */}
         </div>
         <Search>
-          <input type="text" />
-          <PaperAirplaneIcon />
+          <input type="text" onChange={typeMessageHandler} />
+          <PaperAirplaneIcon onClick={sendMessage} />
         </Search>
       </ChatBox>
     </Container>

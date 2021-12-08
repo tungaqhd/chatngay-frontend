@@ -30,10 +30,10 @@ const Container = styled.div`
     border-radius: 8px;
     display: flex;
     svg {
-    width: 32px;
-    height: 32px;
-    margin-right: 4px;
-  }
+      width: 32px;
+      height: 32px;
+      margin-right: 4px;
+    }
   }
   img {
     width: 42px;
@@ -45,7 +45,4 @@ const Container = styled.div`
     /* padding: 4px 8px;
     background-color: lightgray;
     border-radius: 10px; */
-  } */
-
-  
 `;

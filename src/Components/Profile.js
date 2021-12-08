@@ -17,7 +17,7 @@ function Profile() {
     async function fetchApi() {
       try {
         const resProfile = await fetchWithToken(
-          `https://api.chatngay.xyz/api/user/me`
+          `${process.env.REACT_APP_API_KEY}/user/me`
         );
         const userData = await resProfile.json();
         setProfile(userData);
@@ -109,9 +109,9 @@ const MainProfile = styled.div`
     padding: 2rem 4rem;
 
     .edit {
-        padding: 10px 6px;
-        border-radius: 4px;
-        background-color: #ADD9E6;
+      padding: 10px 6px;
+      border-radius: 4px;
+      background-color: #add9e6;
     }
 
     > div {

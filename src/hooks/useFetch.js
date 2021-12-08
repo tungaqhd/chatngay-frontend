@@ -16,6 +16,7 @@ export default function useFetch(url, options = {}) {
         Swal.fire('Server Error!');
         return;
       }
+      console.log(res);
       return res;
     })
     .catch(() => Swal.fire('No Internet Connection'));

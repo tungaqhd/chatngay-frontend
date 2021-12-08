@@ -15,8 +15,6 @@ const defaultOption = async () => {
 export default async function fetchWithToken(url, options = {}) {
   const headers = await defaultOption();
 
-  console.log(headers);
-
   const DEFAULT_OPTIONS = {
     headers: headers,
   };

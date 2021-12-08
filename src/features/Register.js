@@ -80,7 +80,7 @@ const Login = () => {
     try {
       setIsLoadingForm(true);
       const userData = await useFetch(
-        `https://api.chatngay.xyz/api/auth/register`,
+        `${process.env.REACT_APP_API_KEY}/auth/register`,
         {
           method: "POST",
           body: JSON.stringify(data),
@@ -95,8 +95,7 @@ const Login = () => {
         } else {
           const { token } = responseData;
 
-          const tokenObjStr = JSON.stringify(token);
-          localStorage.setItem("token", tokenObjStr);
+          localStorage.setItem("token", token);
           history.push("/");
           //   dispatch(actions.authentication.setAuthenticated());
         }

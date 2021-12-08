@@ -1,7 +1,7 @@
 const getToken = async () => {
     let accessToken = '';
     try {
-      accessToken = await JSON.parse(localStorage.getItem('token'));
+      accessToken = await localStorage.getItem('token');
       return accessToken;
     } catch (error) {
       console.log('error ', error);
