@@ -3,14 +3,16 @@ import styled from "styled-components";
 
 import { FolderIcon } from "@heroicons/react/outline";
 
-function Message() {
+function Message({ data }) {
   return (
     <Container>
       <img src="/toc2.jpg" alt="" />
-      <div>
-        <FolderIcon />
-        <div>file.txt</div>
-      </div>
+      <a href={`https://api.chatngay.xyz/files/${data.fileName}`}>
+        <div>
+          <FolderIcon />
+          <div>{data.originalFilename}</div>
+        </div>
+      </a>
     </Container>
   );
 }

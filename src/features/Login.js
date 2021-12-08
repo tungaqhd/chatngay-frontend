@@ -73,11 +73,8 @@ const Login = () => {
       setIsLoadingForm(false);
       //   console.log(await userData.json());
       const responseData = await userData.json();
-      console.log(userData.status);
       if (userData.status === StatusCode.SuccessOK) {
         if (!responseData.token) {
-          console.log(responseData);
-          console.log(typeof responseData)
           Swal.fire("Server Errorr 2");
         } else {
           const { token } = responseData;

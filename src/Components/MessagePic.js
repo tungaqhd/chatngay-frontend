@@ -1,15 +1,15 @@
-import React from 'react'
+import React from "react";
 import styled from "styled-components";
 
-function MessagePic() {
-    return (
-        <Container>
-            <img src="/toc2.jpg" alt="" />
-        </Container>
-    )
+function MessagePic({ data }) {
+  return (
+    <Container>
+      <img src={`https://api.chatngay.xyz/files/${data}`} alt="" />
+    </Container>
+  );
 }
 
-export default MessagePic
+export default MessagePic;
 
 const Container = styled.div`
   display: flex;
@@ -24,9 +24,9 @@ const Container = styled.div`
   } */
 
   img {
-      width: 82px;
-      height: 100px;
-      border-radius: 4px;
-      margin-right: 4px;
+    width: 82px;
+    height: 100px;
+    border-radius: 4px;
+    margin-right: 4px;
   }
 `;

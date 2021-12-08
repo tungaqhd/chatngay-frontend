@@ -17,7 +17,6 @@ const messageSlice = createSlice({
       state.chatId = payload.id;
     },
     addMoreMessage(state, { payload }) {
-      console.log('add', payload)
       state.messages.push(payload);
     },
     addProfile(state, { payload }) {

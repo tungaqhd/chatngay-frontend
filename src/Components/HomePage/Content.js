@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { PaperAirplaneIcon } from "@heroicons/react/solid";
+import {
+  PaperAirplaneIcon,
+} from "@heroicons/react/solid";
 import Message from "../Message";
-// import MessagePic from "../MessagePic";
-// import MessageFolder from "../MessageFolder";
+import MessagePic from "../MessagePic";
+import MessageFolder from "../MessageFolder";
 import { useSelector } from "react-redux";
 import { selectMessage, friendIdMessage } from "../../features/messageSlice";
 import fetchWithToken from "../../hooks/useFetchToken";
-
+import axios from "axios";
 function Content() {
   const messages = useSelector(selectMessage);
   const friendId = useSelector(friendIdMessage);
   const [chat, setChat] = useState();
+  const [file, setFile] = useState();
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -31,6 +34,35 @@ function Content() {
   const typeMessageHandler = (e) => {
     setChat(e.target.value);
   };
+
+  const onFormSubmit = (e) => {
+    e.preventDefault(); // Stop form submit
+    fileUpload(file);
+  };
+
+  const onChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+  const fileUpload = (file) => {
+    const token = localStorage.getItem("token");
+    const url = `${process.env.REACT_APP_API_KEY}/chat/${friendId}/file`;
+    const formData = new FormData();
+    formData.append("uploadedFile", file);
+    const config = {
+      headers: {
+        "content-type": "multipart/form-data",
+        authorization: "Bearer " + token,
+      },
+    };
+    axios.post(url, formData, config);
+    // return fetch(url, {
+    //   headers: {
+    //     authorization: "Bearer " + token,
+    //   },
+    //   method: "POST",
+    //   body: JSON.stringify(formData),
+    // });
+  };
   return (
     <Container>
       <ChatBox>
@@ -43,8 +75,17 @@ function Content() {
           {messages?.map((message) => {
             if (message.msgType === "text") {
               return <Message key={message._id} message={message} />;
+            } else {
+              if (
+                message.fileId.originalFilename.endsWith(".png") ||
+                message.fileId.originalFilename.endsWith(".jpg") ||
+                message.fileId.originalFilename.endsWith(".jpeg")
+              ) {
+                return <MessagePic data={message.fileId.fileName} />;
+              } else {
+                return <MessageFolder data={message.fileId} />;
+              }
             }
-            return null;
           })}
           {/* <Message />
           <Message />
@@ -55,6 +96,8 @@ function Content() {
         <Search>
           <input type="text" value={chat} onChange={typeMessageHandler} />
           <PaperAirplaneIcon onClick={sendMessage} />
+          <input type="file" onChange={onChange} />
+          <button onClick={onFormSubmit}>Upload</button>
         </Search>
       </ChatBox>
     </Container>
@@ -94,10 +137,21 @@ const Search = styled.div`
   left: 4%;
   right: 0;
 
-  svg {
+  svg:nth-child(2) {
     position: absolute;
     bottom: 10%;
     right: 9%;
+    padding: 0.4rem;
+    color: white;
+    background-color: green;
+    border-radius: 1rem;
+    width: 22px;
+    height: 22px;
+  }
+  svg:nth-child(3) {
+    position: absolute;
+    bottom: 10%;
+    right: 15%;
     padding: 0.4rem;
     color: white;
     background-color: green;
