@@ -64,6 +64,7 @@ function Content() {
 export default Content;
 
 const Container = styled.div`
+  overflow: scroll;
   display: flex;
   flex: 1;
   background-color: white;

@@ -49,7 +49,7 @@ function Sidebar() {
   }, [dispatch]);
 
   useEffect(() => {
-    const socket = io("ws://api.chatngay.xyz");
+    const socket = io("wss://api.chatngay.xyz");
     if (localStorage.getItem("token")) {
       const token = localStorage.getItem("token");
       socket.emit("initChat", token);
@@ -151,6 +151,9 @@ const Container = styled.div`
   display: flex;
   width: 440px;
   height: 100vh;
+  position: sticky;
+  top: 0;
+  left: 0;
 `;
 const Left = styled.div`
   box-sizing: border-box;

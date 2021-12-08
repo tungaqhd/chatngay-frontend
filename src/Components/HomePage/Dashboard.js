@@ -32,4 +32,5 @@ const Container = styled.div`
   display: flex;
   max-width: calc(100vw);
   box-sizing: border-box;
+  overflow: hidden;
 `;

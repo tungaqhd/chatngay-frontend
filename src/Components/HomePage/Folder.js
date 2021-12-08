@@ -78,6 +78,9 @@ const Container = styled.div`
   width: 380px;
   height: 100vh;
   box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  right: 0;
 `;
 
 const Right = styled.div`

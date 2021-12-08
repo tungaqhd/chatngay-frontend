@@ -8,7 +8,7 @@ function Message({ message }) {
   const isSelfMess = message.from === profile._id;
   return (
     <Container className={`${isSelfMess ? "checkMessage" : ""}`}>
-      <img src="/toc2.jpg" alt="" />
+      {!isSelfMess && <img src="/toc2.jpg" alt="" />}
       <div>{message.content}</div>
     </Container>
   );
@@ -20,7 +20,6 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 16px;
-  margin-left: 10px;
   div {
     padding: 4px 8px;
     background-color: lightgray;
