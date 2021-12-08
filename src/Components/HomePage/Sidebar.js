@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Swal from "sweetalert2";
-import { messageActions } from "../../features/messageSlice";
+import { chatIdMessage, messageActions, selectMessage } from "../../features/messageSlice";
 import { io } from "socket.io-client";
 import {
   ClockIcon,
@@ -14,11 +14,15 @@ import {
   DotsVerticalIcon,
 } from "@heroicons/react/outline";
 import fetchWithToken from "../../hooks/useFetchToken";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function Sidebar() {
   const [profile, setProfile] = useState();
+  const chatId = useSelector(chatIdMessage);
   const [listChat, setListChat] = useState();
+  const messages = useSelector(selectMessage);
+
+  console.log(messages);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -45,16 +49,18 @@ function Sidebar() {
   }, [dispatch]);
 
   useEffect(() => {
-    const socket = io("ws://localhost:5000");
+    const socket = io("ws://api.chatngay.xyz");
     if (localStorage.getItem("token")) {
       const token = localStorage.getItem("token");
-      console.log(token);
       socket.emit("initChat", token);
       socket.on("newMessages", (message) => {
         console.log(message);
+        if (message.chatId === chatId) {
+          dispatch(messageActions.addMoreMessage(message));
+        }
       });
     }
-  }, []);
+  }, [chatId, dispatch]);
 
   const getChatGroup = async (id, friendId) => {
     // console.log(id);
@@ -65,7 +71,7 @@ function Sidebar() {
     // console.log(res);
     const messages = await res.json();
 
-    dispatch(messageActions.addMessage({ messages, friendId }));
+    dispatch(messageActions.addMessage({ messages, friendId, id }));
   };
 
   return (

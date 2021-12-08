@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  chatId: null,
   friendId: null,
   messages: [],
   profile: {},
@@ -13,6 +14,11 @@ const messageSlice = createSlice({
     addMessage(state, { payload }) {
       state.messages = payload.messages;
       state.friendId = payload.friendId;
+      state.chatId = payload.id;
+    },
+    addMoreMessage(state, { payload }) {
+      console.log('add', payload)
+      state.messages.push(payload);
     },
     addProfile(state, { payload }) {
       state.profile = payload;
@@ -43,6 +49,7 @@ export const messageActions = messageSlice.actions;
 // export const selectId = (state) => state.message.id;
 export const selectMessage = (state) => state.message.messages;
 export const friendIdMessage = (state) => state.message.friendId;
+export const chatIdMessage = (state) => state.message.chatId;
 export const selectProfile = (state) => state.message.profile;
 
 // Reducer

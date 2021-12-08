@@ -25,6 +25,7 @@ function Content() {
       method: "POST",
       body: JSON.stringify({ data: chatData }),
     });
+    setChat("");
   };
 
   const typeMessageHandler = (e) => {
@@ -43,6 +44,7 @@ function Content() {
             if (message.msgType === "text") {
               return <Message key={message._id} message={message} />;
             }
+            return null;
           })}
           {/* <Message />
           <Message />
@@ -51,7 +53,7 @@ function Content() {
           <MessageFolder /> */}
         </div>
         <Search>
-          <input type="text" onChange={typeMessageHandler} />
+          <input type="text" value={chat} onChange={typeMessageHandler} />
           <PaperAirplaneIcon onClick={sendMessage} />
         </Search>
       </ChatBox>
