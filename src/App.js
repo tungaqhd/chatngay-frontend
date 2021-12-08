@@ -3,6 +3,7 @@ import Dashboard from "./Components/HomePage/Dashboard";
 import Login from "./features/Login";
 import Register from "./features/Register";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Profile from "./Components/Profile";
 
 function App() {
   return (
@@ -15,6 +16,9 @@ function App() {
           </Route>
           <Route path="/register">
             <Register />
+          </Route>
+          <Route path="/profile">
+            <Profile />
           </Route>
           <Route exact path="/">
             <Dashboard />

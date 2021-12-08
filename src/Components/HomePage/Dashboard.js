@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Sidebar from "./Sidebar";
 import Folder from "./Folder";
@@ -12,21 +12,6 @@ function Dashboard() {
   useEffect(() => {
     if (localStorage.getItem("token")) {
       return;
-      // const token = JSON.parse(localStorage.getItem("token"));
-      // const DEFAULT_OPTIONS = {
-      //   "Content-Type": "application/json",
-      //   authorization: `Bearer ${token}`,
-      // };
-
-      // async function getData() {
-      //   const res = await fetch(
-      //     `https://api.chatngay.xyz/api/user/me`,
-      //     DEFAULT_OPTIONS
-      //   );
-      //   const dataUser = await res.json();
-      //   setProfile(dataUser);
-      // }
-      // getData();
     } else {
       history.replace("/login");
     }

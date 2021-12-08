@@ -75,7 +75,7 @@ export default Folder;
 
 const Container = styled.div`
   display: flex;
-  width: 320px;
+  width: 420px;
   height: 100vh;
   box-sizing: border-box;
 `;
