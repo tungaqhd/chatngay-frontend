@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import Swal from "sweetalert2";
+
 import {
   ClockIcon,
   EyeIcon,
@@ -10,8 +12,35 @@ import {
   PlusIcon,
   DotsVerticalIcon,
 } from "@heroicons/react/outline";
+import fetchWithToken from "../../hooks/useFetchToken";
 
 function Sidebar() {
+  const [profile, setProfile] = useState();
+  const [listChat, setListChat] = useState();
+  console.log(profile);
+  useEffect(() => {
+    async function fetchApi() {
+      try {
+        const resProfile = await fetchWithToken(
+          `https://api.chatngay.xyz/api/user/me`
+        );
+        const userData = await resProfile.json();
+        setProfile(userData);
+
+        const resChat = await fetchWithToken(
+          "https://api.chatngay.xyz/api/chat"
+        );
+        const listChat = await resChat.json();
+        setListChat(listChat);
+      } catch (error) {
+        Swal.fire(`Login timeout. Please login again`);
+      }
+    }
+
+    fetchApi();
+  }, []);
+
+  console.log(profile);
   return (
     <Container>
       <Left>
@@ -45,38 +74,39 @@ function Sidebar() {
           <PlusIcon />
           <DotsVerticalIcon />
         </p>
-        <Card>
-          <img src="/user2.jpg" alt="user" />
-          <div>
-            <p>Pearuss</p>
-            <p>typing...</p>
-          </div>
-          <span>11:15</span>
-        </Card>
-        <Card>
-          <img src="/user2.jpg" alt="user" />
-          <div>
-            <p>Pearuss</p>
-            <p>typing...</p>
-          </div>
-          <span>11:15</span>
-        </Card>
-        <Card>
-          <img src="/user2.jpg" alt="user" />
-          <div>
-            <p>Pearuss</p>
-            <p>typing...</p>
-          </div>
-          <span>11:15</span>
-        </Card>
-        <Card>
-          <img src="/user2.jpg" alt="user" />
-          <div>
-            <p>Pearuss</p>
-            <p>typing...</p>
-          </div>
-          <span>11:15</span>
-        </Card>
+        {listChat?.map((chat) => {
+          if (chat.user1[0]._id === profile._id) {
+            const { avatar, username, isOnline, _id } = chat.user2[0];
+            return (
+              <Card key={_id}>
+                <img
+                  src={`https://api.chatngay.xyz/avatars/${avatar}`}
+                  alt="user"
+                />
+                <div>
+                  <span>{username}</span>
+                  <span>{isOnline ? "Online" : "Offine"}</span>
+                </div>
+                <span>11:15</span>
+              </Card>
+            );
+          } else {
+            const { avatar, username, isOnline, _id } = chat.user1[0];
+            return (
+              <Card key={_id}>
+                <img
+                  src={`https://api.chatngay.xyz/avatars/${avatar}`}
+                  alt="user"
+                />
+                <div>
+                  <span>{username}</span>
+                  <span>{isOnline ? "Online" : "Offine"}</span>
+                </div>
+                <span>11:15</span>
+              </Card>
+            );
+          }
+        })}
       </Right>
     </Container>
   );
@@ -214,10 +244,20 @@ const Card = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0 1rem;
+  margin-bottom: 1rem;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    span:last-child {
+      margin-top: 4px;
+      font-size: small;
+    }
+  }
 
   img {
-    width: 32px;
-    height: 32px;
+    width: 38px;
+    height: 38px;
     border-radius: 100%;
   }
 `;
