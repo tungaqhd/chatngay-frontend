@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import Swal from "sweetalert2";
 
 import {
   ClockIcon,
@@ -8,8 +9,25 @@ import {
   VideoCameraIcon,
 } from "@heroicons/react/outline";
 import Folder from "./HomePage/Folder";
+import fetchWithToken from "../hooks/useFetchToken";
 
 function Profile() {
+  const [profile, setProfile] = useState();
+  useEffect(() => {
+    async function fetchApi() {
+      try {
+        const resProfile = await fetchWithToken(
+          `https://api.chatngay.xyz/api/user/me`
+        );
+        const userData = await resProfile.json();
+        setProfile(userData);
+      } catch (error) {
+        Swal.fire(`Login timeout. Please login again`);
+      }
+    }
+
+    fetchApi();
+  }, []);
   return (
     <Container>
       <Left>
@@ -28,7 +46,22 @@ function Profile() {
       <MainProfile>
         <div className="head">
           <img src="/cover-photo4.jpg" alt="cover" />
-          <img src="/toc2" alt="" />
+          <img src="/toc2.jpg" alt="pic" />
+        </div>
+        <div className="info">
+          <div>
+            <span>Email: </span>
+            <span>{profile?.email}</span>
+          </div>
+          <div>
+            <span>User name:</span>
+            <input type="text" value={profile?.username} />
+          </div>
+          <div>
+            <span>Full name:</span>
+            <input type="text" value={profile?.name} />
+          </div>
+          <button className="edit">Edit profile</button>
         </div>
       </MainProfile>
       <Folder />
@@ -45,10 +78,57 @@ const Container = styled.div`
 const MainProfile = styled.div`
   position: relative;
   width: 100%;
+  height: 200px;
   .head {
     img {
       width: 100%;
       height: 200px;
+    }
+    img:nth-child(2) {
+      width: 132px;
+      height: 132px;
+      border-radius: 100%;
+      position: absolute;
+      bottom: -66px;
+      left: 1rem;
+      border: 6px solid white;
+      /* border-color: white; */
+      overflow: hidden;
+      object-fit: cover;
+    }
+  }
+  .info {
+    position: relative;
+    margin-top: 5rem;
+    margin-left: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid black;
+    margin: 6rem 20vw;
+    padding: 2rem 4rem;
+
+    .edit {
+        padding: 10px 6px;
+        border-radius: 4px;
+        background-color: #ADD9E6;
+    }
+
+    > div {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+
+      span {
+        min-width: 6rem;
+      }
+    }
+    input {
+      padding: 0.4rem 0.6rem;
+      margin-left: 1rem;
+      width: 100%;
     }
   }
 `;

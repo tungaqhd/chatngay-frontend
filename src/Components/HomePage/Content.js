@@ -1,6 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import { PaperAirplaneIcon } from "@heroicons/react/solid";
+import Message from "../Message";
+import MessagePic from "../MessagePic";
+import MessageFolder from "../MessageFolder";
 
 function Content() {
   return (
@@ -11,6 +14,13 @@ function Content() {
           <span>Messages</span>
           <span>Participants</span>
         </Title>
+        <div className="message">
+          <Message />
+          <Message />
+          <Message />
+          <MessagePic />
+          <MessageFolder />
+        </div>
         <Search>
           <input type="text" />
           <PaperAirplaneIcon />
@@ -31,9 +41,18 @@ const Container = styled.div`
 const ChatBox = styled.div`
   width: 100%;
   display: flex;
+  flex-direction: column;
   background-color: #edf0f5;
   border-radius: 0.6rem;
   position: relative;
+
+  .message {
+    height: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-st;
+  }
 `;
 
 const Search = styled.div`
