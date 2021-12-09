@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Swal from "sweetalert2";
-import {
-  chatIdMessage,
-  messageActions,
-} from "../../features/messageSlice";
+import { chatIdMessage, messageActions } from "../../features/messageSlice";
 import { io } from "socket.io-client";
 import {
   ClockIcon,
@@ -18,8 +15,8 @@ import {
 } from "@heroicons/react/outline";
 import fetchWithToken from "../../hooks/useFetchToken";
 import { useDispatch, useSelector } from "react-redux";
-import _ from 'lodash'
-import moment from 'moment'
+import _ from "lodash";
+import moment from "moment";
 
 function Sidebar() {
   const [profile, setProfile] = useState();
@@ -45,7 +42,7 @@ function Sidebar() {
         const listChat = await resChat.json();
         setListChat(listChat);
       } catch (error) {
-        console.log(error.message)
+        console.log(error.message);
         Swal.fire(`Login timeout. Please login again`);
       }
     }
@@ -101,13 +98,13 @@ function Sidebar() {
   const inputSearchChangeHandler = (e) => {
     setSearchValue(e.target.value);
 
-    _.debounce(async () => {      
-    const res = await fetchWithToken(
-      `${process.env.REACT_APP_API_KEY}/user?content=${e.target.value}`
-    );
-    const searchData = await res.json();
-    setSearchUser(searchData);
-  }, 500)();
+    _.debounce(async () => {
+      const res = await fetchWithToken(
+        `${process.env.REACT_APP_API_KEY}/user?content=${e.target.value}`
+      );
+      const searchData = await res.json();
+      setSearchUser(searchData);
+    }, 500)();
   };
 
   return (
@@ -121,7 +118,9 @@ function Sidebar() {
         <UsersIcon />
         <VideoCameraIcon />
         <div>
-          <img src="/user2.jpg" alt="user logo" />
+          <a href="/profile">
+            <img src="/user2.jpg" alt="user logo" />
+          </a>
         </div>
       </Left>
       <Right>
@@ -149,52 +148,65 @@ function Sidebar() {
           <DotsVerticalIcon />
         </p>
         {/* onClick={() => getChatGroup(chat._id, _id)} */}
-        {searchUser.length > 0 && searchValue.length > 0 && searchUser?.map((user) => (
-          <Card key={user._id}>
-            <img
-              src={`https://api.chatngay.xyz/avatars/${user.avatar}`}
-              alt="user"
-            />
-            <div>
-              <span>{user.username}</span>
-              <span>{user.isOnline ? "Online" : "Offine"}</span>
-            </div>
-            <span>11:15</span>
-          </Card>
-        ))}
-        {(searchUser.length === 0 || searchValue.length === 0) && listChat?.map((chat) => {
-          if (chat.user1[0]._id === profile._id) {
-            const { avatar, username, isOnline, _id } = chat.user2[0];
-            return (
-              <Card key={_id} onClick={() => getChatGroup(chat._id, chat.user2[0])}>
-                <img
-                  src={`https://api.chatngay.xyz/avatars/${avatar}`}
-                  alt="user"
-                />
-                <div>
-                  <span>{username} <sup>{isOnline ? "Online" : "Offine"}</sup></span>
-                  <span>{chat?.messages[0]?.content}</span>
-                </div>
-                <span>{moment(chat?.messages[0]?.createdAt).format("hh:mm")}</span>
-              </Card>
-            );
-          } else {
-            const { avatar, username, isOnline, _id } = chat.user1[0];
-            return (
-              <Card key={_id} onClick={() => getChatGroup(chat._id, chat.user1[0])}>
-                <img
-                  src={`https://api.chatngay.xyz/avatars/${avatar}`}
-                  alt="user"
-                />
-                <div>
-                  <span>{username}</span>
-                  <span>{isOnline ? "Online" : "Offine"}</span>
-                </div>
-                <span>11:15</span>
-              </Card>
-            );
-          }
-        })}
+        {searchUser.length > 0 &&
+          searchValue.length > 0 &&
+          searchUser?.map((user) => (
+            <Card key={user._id}>
+              <img
+                src={`https://api.chatngay.xyz/avatars/${user.avatar}`}
+                alt="user"
+              />
+              <div>
+                <span>{user.username}</span>
+                <span>{user.isOnline ? "Online" : "Offine"}</span>
+              </div>
+              <span>11:15</span>
+            </Card>
+          ))}
+        {(searchUser.length === 0 || searchValue.length === 0) &&
+          listChat?.map((chat) => {
+            if (chat.user1[0]._id === profile._id) {
+              const { avatar, username, isOnline, _id } = chat.user2[0];
+              return (
+                <Card
+                  key={_id}
+                  onClick={() => getChatGroup(chat._id, chat.user2[0])}
+                >
+                  <img
+                    src={`https://api.chatngay.xyz/avatars/${avatar}`}
+                    alt="user"
+                  />
+                  <div>
+                    <span>
+                      {username} <sup>{isOnline ? "Online" : "Offine"}</sup>
+                    </span>
+                    <span>{chat?.messages[0]?.content}</span>
+                  </div>
+                  <span>
+                    {moment(chat?.messages[0]?.createdAt).format("hh:mm")}
+                  </span>
+                </Card>
+              );
+            } else {
+              const { avatar, username, isOnline, _id } = chat.user1[0];
+              return (
+                <Card
+                  key={_id}
+                  onClick={() => getChatGroup(chat._id, chat.user1[0])}
+                >
+                  <img
+                    src={`https://api.chatngay.xyz/avatars/${avatar}`}
+                    alt="user"
+                  />
+                  <div>
+                    <span>{username}</span>
+                    <span>{isOnline ? "Online" : "Offine"}</span>
+                  </div>
+                  <span>11:15</span>
+                </Card>
+              );
+            }
+          })}
       </Right>
     </Container>
   );
@@ -206,9 +218,8 @@ const Container = styled.div`
   display: flex;
   width: 440px;
   height: 100vh;
-  position: sticky;
-  top: 0;
-  left: 0;
+  /* position: sticky;
+  left: 0; */
 `;
 const Left = styled.div`
   box-sizing: border-box;

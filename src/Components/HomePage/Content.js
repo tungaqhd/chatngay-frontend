@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import {
-  PaperAirplaneIcon,
-} from "@heroicons/react/solid";
+import { PaperAirplaneIcon } from "@heroicons/react/solid";
 import Message from "../Message";
 import MessagePic from "../MessagePic";
 import MessageFolder from "../MessageFolder";
@@ -41,7 +39,7 @@ function Content() {
 
   const onChange = (e) => {
     setFile(e.target.files[0]);
-    console.log(file)
+    console.log(file);
     const token = localStorage.getItem("token");
     const url = `${process.env.REACT_APP_API_KEY}/chat/${friendId}/file`;
     const formData = new FormData();
@@ -72,9 +70,21 @@ function Content() {
                 message.fileId.originalFilename.endsWith(".jpg") ||
                 message.fileId.originalFilename.endsWith(".jpeg")
               ) {
-                return <MessagePic key={message._id} message={message} data={message.fileId.fileName} />;
+                return (
+                  <MessagePic
+                    key={message._id}
+                    message={message}
+                    data={message.fileId.fileName}
+                  />
+                );
               } else {
-                return <MessageFolder key={message._id} message={message} data={message.fileId} />;
+                return (
+                  <MessageFolder
+                    key={message._id}
+                    message={message}
+                    data={message.fileId}
+                  />
+                );
               }
             }
           })}
@@ -97,11 +107,15 @@ function Content() {
 export default Content;
 
 const Container = styled.div`
-  overflow: scroll;
+  /* overflow-x: hidden; */
   display: flex;
-  flex: 1;
+  flex-grow: 1;
   background-color: white;
   padding: 1rem 0;
+  height: calc(100vh-10px);
+  /* overflow-y: auto;
+  overscroll-behavior: contain;
+  contain: paint; */
 `;
 const ChatBox = styled.div`
   width: 100%;
@@ -112,24 +126,32 @@ const ChatBox = styled.div`
   position: relative;
 
   .message {
+    /* ::-webkit-scrollbar {
+      display: block;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: red;
+    } */
+
     height: auto;
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-st;
+    margin-bottom: 10rem;
+    overflow-y: scroll;
   }
 `;
 
 const Search = styled.div`
   position: absolute;
   width: 100%;
-  bottom: 4%;
+  bottom: 2%;
   left: 4%;
   right: 0;
 
   svg:nth-child(2) {
     position: absolute;
-    bottom: 10%;
+    bottom: 12%;
     right: 9%;
     padding: 0.4rem;
     color: white;
@@ -138,15 +160,13 @@ const Search = styled.div`
     width: 22px;
     height: 22px;
   }
-  svg:nth-child(3) {
+  input:nth-child(3) {
     position: absolute;
     bottom: 10%;
     right: 15%;
     padding: 0.4rem;
     color: white;
-    background-color: green;
-    border-radius: 1rem;
-    width: 22px;
+    width: 100px;
     height: 22px;
   }
 
@@ -159,8 +179,7 @@ const Search = styled.div`
 `;
 const Title = styled.div`
   display: flex;
-  padding: 1.4rem 1rem;
-  width: 100%;
+  margin: 1.4rem 1rem;
   height: 36px;
   /* border-bottom: 2px solid lightgray; */
 
@@ -179,7 +198,7 @@ const Title = styled.div`
     background-color: lightgreen;
   }
   .call-button {
-    background-color: #FF6F91;
+    background-color: #ff6f91;
     border: none;
     border-radius: 5px;
     font-weight: bold;

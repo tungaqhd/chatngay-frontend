@@ -80,7 +80,6 @@ const Container = styled.div`
   display: flex;
   width: 380px;
   height: 100vh;
-  box-sizing: border-box;
   position: sticky;
   top: 0;
   right: 0;

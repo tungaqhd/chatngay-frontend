@@ -18,7 +18,7 @@ function Dashboard() {
   }, [history]);
 
   return (
-    <Container>
+    <Container className="main">
       <Sidebar />
       <Content />
       <Folder />
@@ -30,7 +30,11 @@ export default Dashboard;
 
 const Container = styled.div`
   display: flex;
-  max-width: calc(100vw);
-  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
+  position: relative;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
