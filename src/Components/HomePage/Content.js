@@ -37,17 +37,14 @@ function Content() {
 
   const onFormSubmit = (e) => {
     e.preventDefault(); // Stop form submit
-    fileUpload(file);
   };
 
   const onChange = (e) => {
     setFile(e.target.files[0]);
-  };
-  const fileUpload = (file) => {
     const token = localStorage.getItem("token");
     const url = `${process.env.REACT_APP_API_KEY}/chat/${friendId}/file`;
     const formData = new FormData();
-    formData.append("uploadedFile", file);
+    formData.append("uploadedFile", e.target.files[0]);
     const config = {
       headers: {
         "content-type": "multipart/form-data",
@@ -55,13 +52,6 @@ function Content() {
       },
     };
     axios.post(url, formData, config);
-    // return fetch(url, {
-    //   headers: {
-    //     authorization: "Bearer " + token,
-    //   },
-    //   method: "POST",
-    //   body: JSON.stringify(formData),
-    // });
   };
   return (
     <Container>
@@ -97,7 +87,6 @@ function Content() {
           <input type="text" value={chat} onChange={typeMessageHandler} />
           <PaperAirplaneIcon onClick={sendMessage} />
           <input type="file" onChange={onChange} />
-          <button onClick={onFormSubmit}>Upload</button>
         </Search>
       </ChatBox>
     </Container>
