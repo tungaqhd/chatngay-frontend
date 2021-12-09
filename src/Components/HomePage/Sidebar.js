@@ -45,6 +45,7 @@ function Sidebar() {
         const listChat = await resChat.json();
         setListChat(listChat);
       } catch (error) {
+        console.log(error.message)
         Swal.fire(`Login timeout. Please login again`);
       }
     }
@@ -162,9 +163,9 @@ function Sidebar() {
                 />
                 <div>
                   <span>{username} <sup>{isOnline ? "Online" : "Offine"}</sup></span>
-                  <span>{chat?.messages[0].content}</span>
+                  <span>{chat?.messages[0]?.content}</span>
                 </div>
-                <span>{moment(chat?.messages[0].createdAt).format("hh:mm")}</span>
+                <span>{moment(chat?.messages[0]?.createdAt).format("hh:mm")}</span>
               </Card>
             );
           } else {
