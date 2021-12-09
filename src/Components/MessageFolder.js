@@ -5,13 +5,15 @@ import { useSelector } from "react-redux";
 import { selectProfile } from "../features/messageSlice";
 
 import { FolderIcon } from "@heroicons/react/outline";
-
+import moment from 'moment'
 function Message({ data, message }) {
   const profile = useSelector(selectProfile);
   const friendData = useSelector(friend)
   const isSelfMess = message.from === profile._id;
-  return (
-    <Container className={`${isSelfMess ? "checkMessage" : ""}`}>
+  const timeClass = isSelfMess ? "self-time":"friend-time";
+  const classN = isSelfMess ? "checkMessage" : "friend-mess"
+  return (<Container className={classN}>
+      <div className="msg-data">
       {!isSelfMess && <img className="avatar" src={`https://api.chatngay.xyz/avatars/${friendData.avatar}`} alt="" />}
       <a href={`https://api.chatngay.xyz/files/${data.fileName}`}>
         <div className="file-info">
@@ -19,6 +21,8 @@ function Message({ data, message }) {
           <div>{data.originalFilename}</div>
         </div>
       </a>
+      </div>
+      <p className={timeClass}>{moment(message.createdAt).format("hh:mm")}</p>
     </Container>
   );
 }
@@ -58,16 +62,28 @@ export default Message;
 //   }
 // `;
 const Container = styled.div`
+display: flex;
+flex-direction: column;
+margin-bottom: 16px;
+.msg-data {
   display: flex;
-  align-items: center;
-  margin-bottom: 16px;
-  div {
-    padding: 4px 8px;
-    background-color: lightgray;
-    border-radius: 10px;
-  }
+}
+.msg-content {
+  padding: 4px 8px;
+  background-color: lightgray;
+  border-radius: 10px;
+}
+.friend-time {
+  display: block;
+  font-size: 10px;
+  margin-left: 45px;
+}
+.self-time {
+  display: block;
+  font-size: 10px;
+}
 
-  img {
+  .avatar {
     width: 42px;
     height: 42px;
     border-radius: 100%;
