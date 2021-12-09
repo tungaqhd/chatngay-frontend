@@ -35,12 +35,13 @@ function Content() {
     setChat(e.target.value);
   };
 
-  const onFormSubmit = (e) => {
-    e.preventDefault(); // Stop form submit
-  };
+  // const onFormSubmit = (e) => {
+  //   e.preventDefault(); // Stop form submit
+  // };
 
   const onChange = (e) => {
     setFile(e.target.files[0]);
+    console.log(file)
     const token = localStorage.getItem("token");
     const url = `${process.env.REACT_APP_API_KEY}/chat/${friendId}/file`;
     const formData = new FormData();

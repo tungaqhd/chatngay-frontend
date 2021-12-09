@@ -18,7 +18,7 @@ import {
 } from "@heroicons/react/outline";
 import fetchWithToken from "../../hooks/useFetchToken";
 import { useDispatch, useSelector } from "react-redux";
-
+import _ from 'lodash'
 function Sidebar() {
   const [profile, setProfile] = useState();
   const chatId = useSelector(chatIdMessage);
@@ -85,10 +85,16 @@ function Sidebar() {
     setSearchUser(searchData);
   };
 
-  console.log(searchUser);
-
   const inputSearchChangeHandler = (e) => {
     setSearchValue(e.target.value);
+
+    _.debounce(async () => {      
+    const res = await fetchWithToken(
+      `${process.env.REACT_APP_API_KEY}/user?content=${e.target.value}`
+    );
+    const searchData = await res.json();
+    setSearchUser(searchData);
+  }, 500)();
   };
 
   return (
@@ -130,7 +136,7 @@ function Sidebar() {
           <DotsVerticalIcon />
         </p>
         {/* onClick={() => getChatGroup(chat._id, _id)} */}
-        {searchUser.length > 0 && searchUser?.map((user) => (
+        {searchUser.length > 0 && searchValue.length > 0 && searchUser?.map((user) => (
           <Card key={user._id}>
             <img
               src={`https://api.chatngay.xyz/avatars/${user.avatar}`}
@@ -143,7 +149,7 @@ function Sidebar() {
             <span>11:15</span>
           </Card>
         ))}
-        {searchUser.length === 0 && listChat?.map((chat) => {
+        {(searchUser.length === 0 || searchValue.length === 0) && listChat?.map((chat) => {
           if (chat.user1[0]._id === profile._id) {
             const { avatar, username, isOnline, _id } = chat.user2[0];
             return (
