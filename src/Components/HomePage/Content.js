@@ -60,7 +60,7 @@ function Content() {
           <span>Messages</span>
           <button className="call-button">Video Call</button>
         </Title>
-        <div className="message">
+        <div className="message" id="messageList">
           {messages?.map((message) => {
             if (message.msgType === "text") {
               return <Message key={message._id} message={message} />;

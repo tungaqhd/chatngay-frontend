@@ -58,6 +58,12 @@ function Sidebar() {
       socket.on("newMessages", async (message) => {
         if (message.chatId === chatId) {
           dispatch(messageActions.addMoreMessage(message));
+          const scrollContainer = document.getElementById('messageList');
+          scrollContainer.scrollTo({
+              top: scrollContainer.scrollHeight,
+              left: 0,
+              behavior: 'smooth'
+          });
         }
 
         const resChat = await fetchWithToken(
@@ -129,8 +135,8 @@ function Sidebar() {
           <h3>Chat</h3>
         </div>
         <UserInfo>
-          <img src="/user2.jpg" alt="large user" />
-          <h3>Paine</h3>
+          <img src={`https://api.chatngay.xyz/avatars/${profile?.avatar}`} alt="large user" />
+          <h3>{profile?.name}</h3>
         </UserInfo>
 
         <Search>
