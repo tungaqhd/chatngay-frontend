@@ -58,22 +58,32 @@ function Sidebar() {
     if (localStorage.getItem("token")) {
       const token = localStorage.getItem("token");
       socket.emit("initChat", token);
-      socket.on("newMessages", (message) => {
-        console.log(message);
+      socket.on("newMessages", async (message) => {
         if (message.chatId === chatId) {
           dispatch(messageActions.addMoreMessage(message));
         }
+
+        const resChat = await fetchWithToken(
+          `${process.env.REACT_APP_API_KEY}/chat`
+        );
+        const listChat = await resChat.json();
+        setListChat(listChat);
+        // const cloneListChat = _.cloneDeep(listChat)
+        // const updatedListChat = cloneListChat.map(chat => {
+        //   if(chat._id === message.chatId) {
+        //     chat.messages[0] = message;
+        //   }
+        //   return chat;
+        // })
+        // setListChat(updatedListChat)
       });
     }
-  }, [chatId, dispatch]);
+  }, [chatId, dispatch, listChat]);
 
   const getChatGroup = async (id, user) => {
-    // console.log(id);
     const res = await fetchWithToken(
       `${process.env.REACT_APP_API_KEY}/chat/${id}`
     );
-
-    // console.log(res);
     const messages = await res.json();
 
     dispatch(messageActions.addMessage({ messages, user, id }));
