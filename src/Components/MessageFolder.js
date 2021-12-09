@@ -12,9 +12,9 @@ function Message({ data, message }) {
   const isSelfMess = message.from === profile._id;
   return (
     <Container className={`${isSelfMess ? "checkMessage" : ""}`}>
-      {!isSelfMess && <img src={`https://api.chatngay.xyz/avatars/${friendData.avatar}`} alt="" />}
+      {!isSelfMess && <img className="avatar" src={`https://api.chatngay.xyz/avatars/${friendData.avatar}`} alt="" />}
       <a href={`https://api.chatngay.xyz/files/${data.fileName}`}>
-        <div>
+        <div className="file-info">
           <FolderIcon />
           <div>{data.originalFilename}</div>
         </div>
@@ -25,32 +25,65 @@ function Message({ data, message }) {
 
 export default Message;
 
+// const Container = styled.div`
+// .avatar {
+//   width: 42px;
+//   height: 42px;
+//   border-radius: 100%;
+//   margin-right: 4px;
+// }
+
+//   display: flex;
+//   align-items: center;
+//   margin-bottom: 16px;
+//   margin-left: 10px;
+
+//   .file-info {
+//     background-color: lightgray;
+//     padding: 4px 8px;
+//     max-width: 10rem;
+//     border-radius: 8px;
+//     display: flex;
+//     svg {
+//       width: 32px;
+//       height: 32px;
+//       margin-right: 4px;
+//     }
+//   }
+//   img {
+//     width: 42px;
+//     height: 42px;
+//     border-radius: 100%;
+//     margin-right: 4px;
+//   }
+// `;
 const Container = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 16px;
-  margin-left: 10px;
-
-  div:nth-child(2) {
-    background-color: lightgray;
+  div {
     padding: 4px 8px;
-    max-width: 10rem;
-    border-radius: 8px;
-    display: flex;
-    svg {
-      width: 32px;
-      height: 32px;
-      margin-right: 4px;
-    }
+    background-color: lightgray;
+    border-radius: 10px;
   }
+
   img {
     width: 42px;
     height: 42px;
     border-radius: 100%;
     margin-right: 4px;
   }
-  /* div {
-    /* padding: 4px 8px;
-    background-color: lightgray;
-    border-radius: 10px; */
+  
+  .file-info {
+      background-color: lightgray;
+      padding: 4px 8px;
+      max-width: 10rem;
+      border-radius: 8px;
+      display: flex;
+      svg {
+        width: 32px;
+        height: 32px;
+        margin-right: 4px;
+      }
+    }
 `;

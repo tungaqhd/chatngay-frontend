@@ -8,10 +8,11 @@ function MessagePic({ data, message }) {
   const profile = useSelector(selectProfile);
   const friendData = useSelector(friend)
   const isSelfMess = message.from === profile._id;
+  const classN = isSelfMess ? "checkMessage" : "friend-mess"
   return (
-    <Container className={`${isSelfMess ? "checkMessage" : ""}`}>
-      {!isSelfMess && <img src={`https://api.chatngay.xyz/avatars/${friendData.avatar}`} alt="" />}
-      <img src={`https://api.chatngay.xyz/files/${data}`} alt="" />
+    <Container className={classN}>
+      {!isSelfMess && <img className="avatar" src={`https://api.chatngay.xyz/avatars/${friendData.avatar}`} alt="" />}
+      <img className="img-msg" src={`https://api.chatngay.xyz/files/${data}`} alt='' />
     </Container>
   );
 }
@@ -22,18 +23,19 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 16px;
-  margin-left: auto;
-  padding-right: 4px;
-  /* div {
-      padding: 4px 8px;
-      background-color: lightgray;
-      border-radius: 10px;
-  } */
+  div {
+    padding: 4px 8px;
+    background-color: lightgray;
+    border-radius: 10px;
+  }
 
-  img {
-    width: 82px;
-    height: 100px;
-    border-radius: 4px;
+  .avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 100%;
     margin-right: 4px;
+  }
+  .img-msg {
+    max-width: 400px;
   }
 `;
