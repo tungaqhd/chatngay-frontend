@@ -72,9 +72,9 @@ function Content() {
                 message.fileId.originalFilename.endsWith(".jpg") ||
                 message.fileId.originalFilename.endsWith(".jpeg")
               ) {
-                return <MessagePic key={message._id} data={message.fileId.fileName} />;
+                return <MessagePic key={message._id} message={message} data={message.fileId.fileName} />;
               } else {
-                return <MessageFolder key={message._id} data={message.fileId} />;
+                return <MessageFolder key={message._id} message={message} data={message.fileId} />;
               }
             }
           })}

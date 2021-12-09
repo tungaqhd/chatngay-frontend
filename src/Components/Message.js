@@ -2,13 +2,15 @@ import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { selectProfile } from "../features/messageSlice";
+import { friend} from "../features/messageSlice";
 
 function Message({ message }) {
   const profile = useSelector(selectProfile);
+  const friendData = useSelector(friend)
   const isSelfMess = message.from === profile._id;
   return (
     <Container className={`${isSelfMess ? "checkMessage" : ""}`}>
-      {!isSelfMess && <img src="/toc2.jpg" alt="" />}
+      {!isSelfMess && <img src={`https://api.chatngay.xyz/avatars/${friendData.avatar}`} alt="" />}
       <div>{message.content}</div>
     </Container>
   );

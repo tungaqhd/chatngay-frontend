@@ -1,12 +1,18 @@
 import React from "react";
 import styled from "styled-components";
+import { friend} from "../features/messageSlice";
+import { useSelector } from "react-redux";
+import { selectProfile } from "../features/messageSlice";
 
 import { FolderIcon } from "@heroicons/react/outline";
 
-function Message({ data }) {
+function Message({ data, message }) {
+  const profile = useSelector(selectProfile);
+  const friendData = useSelector(friend)
+  const isSelfMess = message.from === profile._id;
   return (
-    <Container>
-      <img src="/toc2.jpg" alt="" />
+    <Container className={`${isSelfMess ? "checkMessage" : ""}`}>
+      {!isSelfMess && <img src={`https://api.chatngay.xyz/avatars/${friendData.avatar}`} alt="" />}
       <a href={`https://api.chatngay.xyz/files/${data.fileName}`}>
         <div>
           <FolderIcon />
