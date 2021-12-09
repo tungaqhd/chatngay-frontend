@@ -19,6 +19,8 @@ import {
 import fetchWithToken from "../../hooks/useFetchToken";
 import { useDispatch, useSelector } from "react-redux";
 import _ from 'lodash'
+import moment from 'moment'
+
 function Sidebar() {
   const [profile, setProfile] = useState();
   const chatId = useSelector(chatIdMessage);
@@ -64,7 +66,7 @@ function Sidebar() {
     }
   }, [chatId, dispatch]);
 
-  const getChatGroup = async (id, friendId) => {
+  const getChatGroup = async (id, user) => {
     // console.log(id);
     const res = await fetchWithToken(
       `${process.env.REACT_APP_API_KEY}/chat/${id}`
@@ -73,7 +75,7 @@ function Sidebar() {
     // console.log(res);
     const messages = await res.json();
 
-    dispatch(messageActions.addMessage({ messages, friendId, id }));
+    dispatch(messageActions.addMessage({ messages, user, id }));
   };
   const searchHandler = async (e) => {
     e.preventDefault();
@@ -153,22 +155,22 @@ function Sidebar() {
           if (chat.user1[0]._id === profile._id) {
             const { avatar, username, isOnline, _id } = chat.user2[0];
             return (
-              <Card key={_id} onClick={() => getChatGroup(chat._id, _id)}>
+              <Card key={_id} onClick={() => getChatGroup(chat._id, chat.user2[0])}>
                 <img
                   src={`https://api.chatngay.xyz/avatars/${avatar}`}
                   alt="user"
                 />
                 <div>
-                  <span>{username}</span>
-                  <span>{isOnline ? "Online" : "Offine"}</span>
+                  <span>{username} <sup>{isOnline ? "Online" : "Offine"}</sup></span>
+                  <span>{chat?.messages[0].content}</span>
                 </div>
-                <span>11:15</span>
+                <span>{moment(chat?.messages[0].createdAt).format("hh:mm")}</span>
               </Card>
             );
           } else {
             const { avatar, username, isOnline, _id } = chat.user1[0];
             return (
-              <Card key={_id} onClick={() => getChatGroup(chat._id, _id)}>
+              <Card key={_id} onClick={() => getChatGroup(chat._id, chat.user1[0])}>
                 <img
                   src={`https://api.chatngay.xyz/avatars/${avatar}`}
                   alt="user"

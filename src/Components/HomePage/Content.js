@@ -60,7 +60,7 @@ function Content() {
         <Title>
           <div>Group Chat</div>
           <span>Messages</span>
-          <span>Participants</span>
+          <button className="call-button">Video Call</button>
         </Title>
         <div className="message">
           {messages?.map((message) => {
@@ -72,9 +72,9 @@ function Content() {
                 message.fileId.originalFilename.endsWith(".jpg") ||
                 message.fileId.originalFilename.endsWith(".jpeg")
               ) {
-                return <MessagePic data={message.fileId.fileName} />;
+                return <MessagePic key={message._id} data={message.fileId.fileName} />;
               } else {
-                return <MessageFolder data={message.fileId} />;
+                return <MessageFolder key={message._id} data={message.fileId} />;
               }
             }
           })}
@@ -177,5 +177,12 @@ const Title = styled.div`
   }
   span:last-child {
     background-color: lightgreen;
+  }
+  .call-button {
+    background-color: #FF6F91;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    color: #fefefe;
   }
 `;

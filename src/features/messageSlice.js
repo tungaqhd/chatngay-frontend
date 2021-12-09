@@ -13,7 +13,8 @@ const messageSlice = createSlice({
   reducers: {
     addMessage(state, { payload }) {
       state.messages = payload.messages;
-      state.friendId = payload.friendId;
+      state.friendId = payload.user._id;
+      state.friend = payload.user;
       state.chatId = payload.id;
     },
     addMoreMessage(state, { payload }) {
@@ -48,6 +49,7 @@ export const messageActions = messageSlice.actions;
 // export const selectId = (state) => state.message.id;
 export const selectMessage = (state) => state.message.messages;
 export const friendIdMessage = (state) => state.message.friendId;
+export const friend = (state) => state.message.friend;
 export const chatIdMessage = (state) => state.message.chatId;
 export const selectProfile = (state) => state.message.profile;
 

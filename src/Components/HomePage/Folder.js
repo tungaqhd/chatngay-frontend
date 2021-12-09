@@ -6,19 +6,22 @@ import {
   DotsVerticalIcon,
   ChevronRightIcon,
 } from "@heroicons/react/outline";
+import { useSelector } from "react-redux";
+import { friend } from "../../features/messageSlice";
 
 function Folder() {
+  const friendData = useSelector(friend);
   return (
     <Container>
       <Right>
         <div>
           <ChevronLeftIcon />
-          <h3>Share files</h3>
+          <h3>User profile</h3>
         </div>
         <UserInfo>
-          <img src="/group.jpg" alt="large user" />
-          <h3>Team Game</h3>
-          <span>10 members</span>
+          <img src={`https://api.chatngay.xyz/avatars/${friendData?.avatar}`} alt="large user" />
+          <h3>{friendData?.username}</h3>
+          <span>{friend?.isOnline ? "Online": "Offline"}</span>
         </UserInfo>
         <Box>
           <div>
