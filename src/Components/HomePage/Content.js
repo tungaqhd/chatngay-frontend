@@ -5,13 +5,14 @@ import Message from "../Message";
 import MessagePic from "../MessagePic";
 import MessageFolder from "../MessageFolder";
 import { useSelector } from "react-redux";
-import { selectMessage, friendIdMessage } from "../../features/messageSlice";
+import { selectMessage, friendIdMessage, friend } from "../../features/messageSlice";
 import fetchWithToken from "../../hooks/useFetchToken";
 import axios from "axios";
 function Content() {
   const messages = useSelector(selectMessage);
   const friendId = useSelector(friendIdMessage);
-  const [chat, setChat] = useState();
+  const friendData = useSelector(friend);
+  const [chat, setChat] = useState("");
   const [file, setFile] = useState();
 
   const sendMessage = async (e) => {
@@ -56,7 +57,7 @@ function Content() {
     <Container>
       <ChatBox>
         <Title>
-          <div>Group Chat</div>
+          <div>{friendData?.name}</div>
           <span>Messages</span>
           <button className="call-button">Video Call</button>
         </Title>

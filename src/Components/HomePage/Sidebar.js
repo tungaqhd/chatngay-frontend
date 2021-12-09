@@ -51,37 +51,40 @@ function Sidebar() {
   }, [dispatch]);
 
   useEffect(() => {
+    console.log('ok')
     const socket = io("wss://api.chatngay.xyz");
-    if (localStorage.getItem("token")) {
-      const token = localStorage.getItem("token");
-      socket.emit("initChat", token);
-      socket.on("newMessages", async (message) => {
-        if (message.chatId === chatId) {
-          dispatch(messageActions.addMoreMessage(message));
-          const scrollContainer = document.getElementById('messageList');
-          scrollContainer.scrollTo({
-              top: scrollContainer.scrollHeight,
-              left: 0,
-              behavior: 'smooth'
-          });
-        }
+    const token = localStorage.getItem("token");
+    socket.emit("initChat", token);
+    socket.on("newMessages", async (message) => {
+      if (message.chatId === chatId) {
+        dispatch(messageActions.addMoreMessage(message));
+        const scrollContainer = document.getElementById('messageList');
+        scrollContainer.scrollTo({
+            top: scrollContainer.scrollHeight,
+            left: 0,
+            behavior: 'smooth'
+        });
+      }
 
-        const resChat = await fetchWithToken(
-          `${process.env.REACT_APP_API_KEY}/chat`
-        );
-        const listChat = await resChat.json();
-        setListChat(listChat);
-        // const cloneListChat = _.cloneDeep(listChat)
-        // const updatedListChat = cloneListChat.map(chat => {
-        //   if(chat._id === message.chatId) {
-        //     chat.messages[0] = message;
-        //   }
-        //   return chat;
-        // })
-        // setListChat(updatedListChat)
-      });
-    }
-  }, [chatId, dispatch, listChat]);
+      const resChat = await fetchWithToken(
+        `${process.env.REACT_APP_API_KEY}/chat`
+      );
+      const listChat = await resChat.json();
+      setListChat(listChat);
+      const cloneListChat = _.cloneDeep(listChat)
+      const updatedListChat = cloneListChat.map(chat => {
+        if(chat._id === message.chatId) {
+          chat.messages[0] = message;
+        }
+        return chat;
+      })
+      setListChat(updatedListChat)
+
+      return () => {
+        socket.emit('forceDisconnect');
+      }
+    });
+  }, [dispatch, chatId]);
 
   const getChatGroup = async (id, user) => {
     const res = await fetchWithToken(
