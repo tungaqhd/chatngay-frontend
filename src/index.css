@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -ms-overflow-style: none;
 }
 
 code {
@@ -14,3 +15,6 @@ code {
 .checkMessage {
   margin-left: auto;
 }
+/* ::-webkit-scrollbar {
+  display: none;
+} */
