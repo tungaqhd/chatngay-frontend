@@ -23,6 +23,10 @@ const messageSlice = createSlice({
     addProfile(state, { payload }) {
       state.profile = payload;
     },
+    setFriend(state, {payload}) {
+      state.friend = payload.user
+      state.friendId = payload.user._id;
+    }
     // login(state, action: PayloadAction<LoginPayload>) {
     //   state.logging = true;
     // },

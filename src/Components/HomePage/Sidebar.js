@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Swal from "sweetalert2";
-import { chatIdMessage, messageActions } from "../../features/messageSlice";
+import {
+  chatIdMessage,
+  messageActions,
+  friend,
+} from "../../features/messageSlice";
 import { io } from "socket.io-client";
 import {
   ClockIcon,
@@ -21,8 +25,9 @@ import moment from "moment";
 function Sidebar() {
   const [profile, setProfile] = useState();
   const chatId = useSelector(chatIdMessage);
+  const frienData = useSelector(friend);
   const [listChat, setListChat] = useState();
-  const [searchValue, setSearchValue] = useState();
+  const [searchValue, setSearchValue] = useState("");
   const [searchUser, setSearchUser] = useState([]);
 
   const dispatch = useDispatch();
@@ -51,18 +56,18 @@ function Sidebar() {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log('ok')
+    console.log("ok");
     const socket = io("wss://api.chatngay.xyz");
     const token = localStorage.getItem("token");
     socket.emit("initChat", token);
     socket.on("newMessages", async (message) => {
-      if (message.chatId === chatId) {
+      if (message.chatId === chatId || (!chatId && frienData?._id)) {
         dispatch(messageActions.addMoreMessage(message));
-        const scrollContainer = document.getElementById('messageList');
+        const scrollContainer = document.getElementById("messageList");
         scrollContainer.scrollTo({
-            top: scrollContainer.scrollHeight,
-            left: 0,
-            behavior: 'smooth'
+          top: scrollContainer.scrollHeight,
+          left: 0,
+          behavior: "smooth",
         });
       }
 
@@ -71,20 +76,20 @@ function Sidebar() {
       );
       const listChat = await resChat.json();
       setListChat(listChat);
-      const cloneListChat = _.cloneDeep(listChat)
-      const updatedListChat = cloneListChat.map(chat => {
-        if(chat._id === message.chatId) {
+      const cloneListChat = _.cloneDeep(listChat);
+      const updatedListChat = cloneListChat.map((chat) => {
+        if (chat._id === message.chatId) {
           chat.messages[0] = message;
         }
         return chat;
-      })
-      setListChat(updatedListChat)
+      });
+      setListChat(updatedListChat);
 
       return () => {
-        socket.emit('forceDisconnect');
-      }
+        socket.emit("forceDisconnect");
+      };
     });
-  }, [dispatch, chatId]);
+  }, [dispatch, chatId, frienData]);
 
   const getChatGroup = async (id, user) => {
     const res = await fetchWithToken(
@@ -93,12 +98,16 @@ function Sidebar() {
     const messages = await res.json();
 
     dispatch(messageActions.addMessage({ messages, user, id }));
-    const scrollContainer = document.getElementById('messageList');
+    const scrollContainer = document.getElementById("messageList");
     scrollContainer.scrollTo({
-        top: scrollContainer.scrollHeight,
-        left: 0,
-        behavior: 'smooth'
+      top: scrollContainer.scrollHeight,
+      left: 0,
+      behavior: "smooth",
     });
+  };
+  const setFriend = async (user) => {
+    setSearchValue("");
+    dispatch(messageActions.setFriend({ user }));
   };
   const searchHandler = async (e) => {
     e.preventDefault();
@@ -126,15 +135,15 @@ function Sidebar() {
     <Container>
       <Left>
         <Logo>
-          <img src="/logo.svg" alt="logo" />
+          <img src='/logo.svg' alt='logo' />
         </Logo>
         <ClockIcon />
         <EyeIcon />
         <UsersIcon />
         <VideoCameraIcon />
         <div>
-          <a href="/profile">
-            <img src="/user2.jpg" alt="user logo" />
+          <a href='/profile'>
+            <img src='/user2.jpg' alt='user logo' />
           </a>
         </div>
       </Left>
@@ -144,18 +153,21 @@ function Sidebar() {
           <h3>Chat</h3>
         </div>
         <UserInfo>
-          <img src={`https://api.chatngay.xyz/avatars/${profile?.avatar}`} alt="large user" />
+          <img
+            src={`https://api.chatngay.xyz/avatars/${profile?.avatar}`}
+            alt='large user'
+          />
           <h3>{profile?.name}</h3>
         </UserInfo>
 
         <Search>
           <input
-            type="text"
+            type='text'
             value={searchValue}
             onChange={inputSearchChangeHandler}
-            placeholder="search"
+            placeholder='search'
           />
-          <SearchIcon className="searchIcon" onClick={searchHandler} />
+          <SearchIcon className='searchIcon' onClick={searchHandler} />
         </Search>
         <p>
           <span>Last chats</span>
@@ -166,10 +178,10 @@ function Sidebar() {
         {searchUser.length > 0 &&
           searchValue.length > 0 &&
           searchUser?.map((user) => (
-            <Card key={user._id}>
+            <Card onClick={() => setFriend(user)} key={user._id}>
               <img
                 src={`https://api.chatngay.xyz/avatars/${user.avatar}`}
-                alt="user"
+                alt='user'
               />
               <div>
                 <span>{user.username}</span>
@@ -189,7 +201,7 @@ function Sidebar() {
                 >
                   <img
                     src={`https://api.chatngay.xyz/avatars/${avatar}`}
-                    alt="user"
+                    alt='user'
                   />
                   <div>
                     <span>
@@ -211,7 +223,7 @@ function Sidebar() {
                 >
                   <img
                     src={`https://api.chatngay.xyz/avatars/${avatar}`}
-                    alt="user"
+                    alt='user'
                   />
                   <div>
                     <span>{username}</span>
