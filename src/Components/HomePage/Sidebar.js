@@ -93,6 +93,12 @@ function Sidebar() {
     const messages = await res.json();
 
     dispatch(messageActions.addMessage({ messages, user, id }));
+    const scrollContainer = document.getElementById('messageList');
+    scrollContainer.scrollTo({
+        top: scrollContainer.scrollHeight,
+        left: 0,
+        behavior: 'smooth'
+    });
   };
   const searchHandler = async (e) => {
     e.preventDefault();
