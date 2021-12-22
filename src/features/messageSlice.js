@@ -27,6 +27,9 @@ const messageSlice = createSlice({
     addReply(state, { payload }) {
       state.reply = payload;
     },
+    clearReply(state) {
+      state.reply = {};
+    },
     setFriend(state, { payload }) {
       state.friend = payload.user;
       state.friendId = payload.user._id;

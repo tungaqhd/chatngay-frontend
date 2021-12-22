@@ -1,25 +1,26 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import {
-  messageActions,
-  selectProfile,
-  selectReply,
-} from "../features/messageSlice";
+import { messageActions, selectProfile } from "../features/messageSlice";
 import { friend } from "../features/messageSlice";
 import moment from "moment";
 
 function Message({ message }) {
   const dispatch = useDispatch();
   const profile = useSelector(selectProfile);
-  const reply = useSelector(selectReply);
+
   const friendData = useSelector(friend);
   const isSelfMess = message.from === profile._id;
   const timeClass = isSelfMess ? "self-time" : "friend-time";
 
-  const storeReplyHandler = (replyId, replyContent) => {
-    dispatch(messageActions.addReply({ replyId, replyContent }));
-    console.log(reply);
+  const storeReplyHandler = (replyId, replyContent, isSelfMess) => {
+    dispatch(
+      messageActions.addReply({
+        id: replyId,
+        content: replyContent,
+        isSelfReply: isSelfMess,
+      })
+    );
   };
   return (
     <Container className={`${isSelfMess ? "checkMessage" : ""}`}>
@@ -36,7 +37,9 @@ function Message({ message }) {
           src="/reply1.png"
           alt="s"
           className="reply"
-          onClick={() => storeReplyHandler(message._id, message.content)}
+          onClick={() =>
+            storeReplyHandler(message._id, message.content, isSelfMess)
+          }
         />
       </div>
       <p className={timeClass}>{moment(message.createdAt).format("hh:mm")}</p>

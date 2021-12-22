@@ -3,11 +3,14 @@ import styled from "styled-components";
 import Message from "../Message";
 import MessagePic from "../MessagePic";
 import MessageFolder from "../MessageFolder";
-import { useSelector } from "react-redux";
+import { XIcon } from "@heroicons/react/solid";
+import { useDispatch, useSelector } from "react-redux";
 import {
   selectMessage,
   friendIdMessage,
   friend,
+  selectReply,
+  messageActions,
 } from "../../features/messageSlice";
 import fetchWithToken from "../../hooks/useFetchToken";
 import axios from "axios";
@@ -18,6 +21,9 @@ function Content() {
   const [chat, setChat] = useState("");
   const [file, setFile] = useState();
 
+  const reply = useSelector(selectReply);
+  const dispatch = useDispatch();
+
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!chat.trim()) return;
@@ -26,6 +32,7 @@ function Content() {
       msgType: "text",
       content: chat,
     };
+    dispatch(messageActions.clearReply());
     await fetchWithToken(`${process.env.REACT_APP_API_KEY}/chat/${friendId}`, {
       method: "POST",
       body: JSON.stringify({ data: chatData }),
@@ -40,6 +47,9 @@ function Content() {
   // const onFormSubmit = (e) => {
   //   e.preventDefault(); // Stop form submit
   // };
+  const closeReply = () => {
+    dispatch(messageActions.clearReply());
+  };
 
   const onChange = (e) => {
     setFile(e.target.files[0]);
@@ -94,12 +104,18 @@ function Content() {
           })}
         </div>
         <Search>
-          {/* <div className="replyMessage">
-            <div>
-              Replying to <span>{friendData?.name}</span>
+          {reply?.id && reply?.content && (
+            <div className="replyMessage">
+              <div>
+                Replying to
+                <span>
+                  {reply?.isSelfReply ? "Your self" : friendData?.name}
+                </span>
+              </div>
+              <XIcon className="closeIcon" onClick={closeReply} />
+              <div className="contentReply">{reply.content}</div>
             </div>
-            <div className="contentReply">Concac</div>
-          </div> */}
+          )}
           <input type="text" value={chat} onChange={typeMessageHandler} />
           <img src="/send1.png" alt="send message" onClick={sendMessage} />
           <input type="file" onChange={onChange} className="inputFile" />
@@ -142,42 +158,42 @@ const ChatBox = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-    margin-bottom: 4rem;
+    /* margin-bottom: 4rem; */
     /* margin-bottom: 8rem; */
     overflow-y: scroll;
   }
 `;
 
 const Search = styled.div`
-  /* position: absolute;
-  width: 100%;
-  bottom: 2%;
-  left: 4%;
-  right: 0; */
   position: relative;
   display: flex;
   align-items: flex-end;
-  /* flex-direction: column; */
   margin: 1rem;
   margin-left: 2rem;
 
+  .closeIcon {
+    height: 16px;
+    position: absolute;
+    right: 1rem;
+    top: 0.6rem;
+    color: lightgray;
+  }
   .replyMessage {
     position: absolute;
     top: -4rem;
     padding: 0.2rem 1rem;
     background: white;
-    width: 70%;
-    max-width: 50vw;
+    width: 94%;
+    /* max-width: 50vw; */
     border-radius: 8px;
     span {
       color: green;
+      margin-left: 8px;
     }
-    width: 100%;
 
     .contentReply {
       margin-top: 8px;
     }
-
   }
   img {
     position: absolute;
