@@ -31,6 +31,7 @@ function Content() {
     const chatData = {
       msgType: "text",
       content: chat,
+      replyToId: reply?.id || null,
     };
     dispatch(messageActions.clearReply());
     await fetchWithToken(`${process.env.REACT_APP_API_KEY}/chat/${friendId}`, {
@@ -72,9 +73,9 @@ function Content() {
         <Title>
           <div>{friendData?.name}</div>
           <span>Messages</span>
-          <button className="call-button">Video Call</button>
+          <button className='call-button'>Video Call</button>
         </Title>
-        <div className="message" id="messageList">
+        <div className='message' id='messageList'>
           {messages?.map((message) => {
             if (message.msgType === "text") {
               return <Message key={message._id} message={message} />;
@@ -105,20 +106,20 @@ function Content() {
         </div>
         <Search>
           {reply?.id && reply?.content && (
-            <div className="replyMessage">
+            <div className='replyMessage'>
               <div>
                 Replying to
                 <span>
                   {reply?.isSelfReply ? "Your self" : friendData?.name}
                 </span>
               </div>
-              <XIcon className="closeIcon" onClick={closeReply} />
-              <div className="contentReply">{reply.content}</div>
+              <XIcon className='closeIcon' onClick={closeReply} />
+              <div className='contentReply'>{reply.content}</div>
             </div>
           )}
-          <input type="text" value={chat} onChange={typeMessageHandler} />
-          <img src="/send1.png" alt="send message" onClick={sendMessage} />
-          <input type="file" onChange={onChange} className="inputFile" />
+          <input type='text' value={chat} onChange={typeMessageHandler} />
+          <img src='/send1.png' alt='send message' onClick={sendMessage} />
+          <input type='file' onChange={onChange} className='inputFile' />
         </Search>
       </ChatBox>
     </Container>

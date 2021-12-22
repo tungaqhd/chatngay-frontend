@@ -32,12 +32,7 @@ function Message({ message }) {
             className='avatar'
           />
         )}
-        <div className='msg-content'>
-          {message?.replyToId?.content && (
-            <div className='reply-content'>{message?.replyToId?.content}</div>
-          )}
-          {message.content}
-        </div>
+        <div className='msg-content'>{message.content}</div>
         <img
           src='/reply1.png'
           alt='s'
@@ -70,9 +65,6 @@ const Container = styled.div`
     padding: 4px 8px;
     background-color: lightgray;
     border-radius: 10px;
-  }
-  .reply-content {
-    background-color: white;
   }
   .friend-time {
     display: block;
