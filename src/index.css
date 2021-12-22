@@ -15,6 +15,11 @@ code {
 .checkMessage {
   margin-left: auto;
 }
+.checkMessage .reply {
+  position: absolute;
+  top: -0.6rem;
+  left: -3rem;
+}
 /* ::-webkit-scrollbar {
   display: none;
 } */

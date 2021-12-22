@@ -5,6 +5,7 @@ const initialState = {
   friendId: null,
   messages: [],
   profile: {},
+  reply: {},
 };
 
 const messageSlice = createSlice({
@@ -23,10 +24,13 @@ const messageSlice = createSlice({
     addProfile(state, { payload }) {
       state.profile = payload;
     },
-    setFriend(state, {payload}) {
-      state.friend = payload.user
+    addReply(state, { payload }) {
+      state.reply = payload;
+    },
+    setFriend(state, { payload }) {
+      state.friend = payload.user;
       state.friendId = payload.user._id;
-    }
+    },
     // login(state, action: PayloadAction<LoginPayload>) {
     //   state.logging = true;
     // },
@@ -56,6 +60,7 @@ export const friendIdMessage = (state) => state.message.friendId;
 export const friend = (state) => state.message.friend;
 export const chatIdMessage = (state) => state.message.chatId;
 export const selectProfile = (state) => state.message.profile;
+export const selectReply = (state) => state.message.reply;
 
 // Reducer
 const messageReducer = messageSlice.reducer;

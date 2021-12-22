@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { PaperAirplaneIcon } from "@heroicons/react/solid";
 import Message from "../Message";
 import MessagePic from "../MessagePic";
 import MessageFolder from "../MessageFolder";
 import { useSelector } from "react-redux";
-import { selectMessage, friendIdMessage, friend } from "../../features/messageSlice";
+import {
+  selectMessage,
+  friendIdMessage,
+  friend,
+} from "../../features/messageSlice";
 import fetchWithToken from "../../hooks/useFetchToken";
 import axios from "axios";
 function Content() {
@@ -89,16 +92,17 @@ function Content() {
               }
             }
           })}
-          {/* <Message />
-          <Message />
-          <Message />
-          <MessagePic />
-          <MessageFolder /> */}
         </div>
         <Search>
+          {/* <div className="replyMessage">
+            <div>
+              Replying to <span>{friendData?.name}</span>
+            </div>
+            <div className="contentReply">Concac</div>
+          </div> */}
           <input type="text" value={chat} onChange={typeMessageHandler} />
-          <PaperAirplaneIcon onClick={sendMessage} />
-          <input type="file" onChange={onChange} />
+          <img src="/send1.png" alt="send message" onClick={sendMessage} />
+          <input type="file" onChange={onChange} className="inputFile" />
         </Search>
       </ChatBox>
     </Container>
@@ -139,32 +143,54 @@ const ChatBox = styled.div`
     display: flex;
     flex-direction: column;
     margin-bottom: 4rem;
+    /* margin-bottom: 8rem; */
     overflow-y: scroll;
   }
 `;
 
 const Search = styled.div`
-  position: absolute;
+  /* position: absolute;
   width: 100%;
   bottom: 2%;
   left: 4%;
-  right: 0;
+  right: 0; */
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  /* flex-direction: column; */
+  margin: 1rem;
+  margin-left: 2rem;
 
-  svg:nth-child(2) {
+  .replyMessage {
     position: absolute;
-    bottom: 12%;
-    right: 9%;
-    padding: 0.4rem;
-    color: white;
-    background-color: green;
-    border-radius: 1rem;
-    width: 22px;
-    height: 22px;
+    top: -4rem;
+    padding: 0.2rem 1rem;
+    background: white;
+    width: 70%;
+    max-width: 50vw;
+    border-radius: 8px;
+    span {
+      color: green;
+    }
+    width: 100%;
+
+    .contentReply {
+      margin-top: 8px;
+    }
+
   }
-  input:nth-child(3) {
+  img {
     position: absolute;
-    bottom: 10%;
-    right: 15%;
+    bottom: 0;
+    right: 1rem;
+    padding: 0.4rem;
+    width: 32px;
+    height: 32px;
+  }
+  .inputFile {
+    position: absolute;
+    bottom: 0.4rem;
+    right: 3.8rem;
     padding: 0.4rem;
     color: white;
     width: 100px;
@@ -172,10 +198,11 @@ const Search = styled.div`
   }
 
   input {
-    width: 84%;
+    width: 100%;
     padding: 1rem 2rem;
     border-radius: 0.8rem;
     border: none;
+    outline: none;
   }
 `;
 const Title = styled.div`

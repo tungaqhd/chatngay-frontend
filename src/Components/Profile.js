@@ -8,7 +8,6 @@ import {
   UsersIcon,
   VideoCameraIcon,
 } from "@heroicons/react/outline";
-import Folder from "./HomePage/Folder";
 import fetchWithToken from "../hooks/useFetchToken";
 
 function Profile() {
@@ -64,7 +63,6 @@ function Profile() {
           <button className="edit">Edit profile</button>
         </div>
       </MainProfile>
-      <Folder />
     </Container>
   );
 }
