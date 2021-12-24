@@ -59,8 +59,10 @@ function Sidebar() {
     const socket = io(process.env.REACT_APP_SOCKET);
     const token = localStorage.getItem("token");
     socket.emit("initChat", token);
+    socket.on("callReceived", (id, name) => {
+      console.log(`${name} is calling you on ${id}`);
+    });
     socket.on("newMessages", async (message) => {
-      console.log(message);
       if (message.chatId === chatId || (!chatId && frienData?._id)) {
         dispatch(messageActions.addMoreMessage(message));
         const scrollContainer = document.getElementById("messageList");

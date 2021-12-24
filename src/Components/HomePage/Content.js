@@ -54,7 +54,6 @@ function Content() {
 
   const onChange = (e) => {
     setFile(e.target.files[0]);
-    console.log(file);
     const token = localStorage.getItem("token");
     const url = `${process.env.REACT_APP_API_KEY}/chat/${friendId}/file`;
     const formData = new FormData();
@@ -67,17 +66,36 @@ function Content() {
     };
     axios.post(url, formData, config);
   };
+
+  const onCallVideo = async () => {
+    const chatData = {
+      msgType: "call",
+      content: "Video Call",
+    };
+    const res = await fetchWithToken(
+      `${process.env.REACT_APP_API_KEY}/chat/${friendId}`,
+      {
+        method: "POST",
+        body: JSON.stringify({ data: chatData }),
+      }
+    );
+    const tmp = await res.json();
+    window.open(`/video-call/${tmp.id}`);
+  };
+
   return (
     <Container>
       <ChatBox>
         <Title>
           <div>{friendData?.name}</div>
           <span>Messages</span>
-          <button className='call-button'>Video Call</button>
+          <button className='call-button' onClick={onCallVideo}>
+            Video Call
+          </button>
         </Title>
         <div className='message' id='messageList'>
           {messages?.map((message) => {
-            if (message.msgType === "text") {
+            if (message.msgType === "text" || message.msgType === "call") {
               return <Message key={message._id} message={message} />;
             } else {
               if (

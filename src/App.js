@@ -24,7 +24,7 @@ function App() {
           <Route exact path='/'>
             <Dashboard />
           </Route>
-          <Route exact path='/video-call'>
+          <Route exact path='/video-call/:friendId'>
             <VideoCall />
           </Route>
         </Switch>
