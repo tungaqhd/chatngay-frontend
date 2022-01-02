@@ -9,68 +9,75 @@ import {
 import { useSelector } from "react-redux";
 import { friend } from "../../features/messageSlice";
 
-function Folder() {
+function Folder({ showFolder }) {
   const friendData = useSelector(friend);
   return (
-    <Container>
-      <Right>
-        <div>
-          <ChevronLeftIcon />
-          <h3>User profile</h3>
-        </div>
-        <UserInfo>
-          <img src={`https://api.chatngay.xyz/avatars/${friendData?.avatar}`} alt="large user" />
-          <h3>{friendData?.username}</h3>
-          <span>{friend?.isOnline ? "Online": "Offline"}</span>
-        </UserInfo>
-        <Box>
-          <div>
-            <FolderIcon />
-            <div>25 files</div>
-          </div>
-          <div>
-            <FolderIcon />
-            <div>25 files</div>
-          </div>
-        </Box>
-        <p className="fileType">
-          <span>File type</span>
-          <DotsVerticalIcon />
-        </p>
-        <Card>
-          <FolderIcon />
-          <div>
-            <span>Documents</span>
-            <span>126 files, 193MB</span>
-          </div>
-          <ChevronRightIcon />
-        </Card>
-        <Card>
-          <FolderIcon />
-          <div>
-            <span>Documents</span>
-            <span>126 files, 193MB</span>
-          </div>
-          <ChevronRightIcon />
-        </Card>
-        <Card>
-          <FolderIcon />
-          <div>
-            <span>Documents</span>
-            <span>126 files, 193MB</span>
-          </div>
-          <ChevronRightIcon />
-        </Card>
-        <Card>
-          <FolderIcon />
-          <div>
-            <span>Documents</span>
-            <span>126 files, 193MB</span>
-          </div>
-          <ChevronRightIcon />
-        </Card>
-      </Right>
-    </Container>
+    <>
+      {showFolder ? (
+        <Container>
+          <Right>
+            <div>
+              <ChevronLeftIcon />
+              <h3>User profile</h3>
+            </div>
+            <UserInfo>
+              <img
+                src={`https://api.chatngay.xyz/avatars/${friendData?.avatar}`}
+                alt="large user"
+              />
+              <h3>{friendData?.username}</h3>
+              <span>{friend?.isOnline ? "Online" : "Offline"}</span>
+            </UserInfo>
+            <Box>
+              <div>
+                <FolderIcon />
+                <div>25 files</div>
+              </div>
+              <div>
+                <FolderIcon />
+                <div>25 files</div>
+              </div>
+            </Box>
+            <p className="fileType">
+              <span>File type</span>
+              <DotsVerticalIcon />
+            </p>
+            <Card>
+              <FolderIcon />
+              <div>
+                <span>Documents</span>
+                <span>126 files, 193MB</span>
+              </div>
+              <ChevronRightIcon />
+            </Card>
+            <Card>
+              <FolderIcon />
+              <div>
+                <span>Documents</span>
+                <span>126 files, 193MB</span>
+              </div>
+              <ChevronRightIcon />
+            </Card>
+            <Card>
+              <FolderIcon />
+              <div>
+                <span>Documents</span>
+                <span>126 files, 193MB</span>
+              </div>
+              <ChevronRightIcon />
+            </Card>
+            <Card>
+              <FolderIcon />
+              <div>
+                <span>Documents</span>
+                <span>126 files, 193MB</span>
+              </div>
+              <ChevronRightIcon />
+            </Card>
+          </Right>
+        </Container>
+      ) : null}
+    </>
   );
 }
 
