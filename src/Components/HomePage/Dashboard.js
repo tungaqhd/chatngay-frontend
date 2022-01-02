@@ -4,7 +4,7 @@ import Sidebar from "./Sidebar";
 import Folder from "./Folder";
 import Content from "./Content";
 import { useHistory } from "react-router";
-// import useFetchToken from "../../hooks/useFetchToken";
+import useToggle from "../../hooks/use-toggle";
 
 /* eslint-disable */
 function Dashboard() {
@@ -16,12 +16,13 @@ function Dashboard() {
       history.replace("/login");
     }
   }, [history]);
+  const [showFolder, setShowFolder] = useToggle(true);
 
   return (
     <Container className="main">
-      <Sidebar />
+      <Sidebar setShowFolder={setShowFolder} />
       <Content />
-      <Folder />
+      <Folder showFolder={showFolder} />
     </Container>
   );
 }
