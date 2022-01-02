@@ -109,8 +109,9 @@ function Message({ message, match }) {
 
   return (
     <Container>
-      <video height={300} width={300} ref={myVideo}></video>
-      <video height={300} width={300} ref={friendVideo}></video>
+      <video className="my-video" ref={myVideo}></video>
+      <video className="friend-video" ref={friendVideo}></video>
+      <button></button>
     </Container>
   );
 }
@@ -118,36 +119,22 @@ function Message({ message, match }) {
 export default Message;
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 16px;
-  .msg-data {
-    display: flex;
-    position: relative;
-    .reply {
-      height: 18px;
-      margin: 18px 0 0 12px;
-    }
-  }
-  .msg-content {
-    padding: 4px 8px;
-    background-color: lightgray;
-    border-radius: 10px;
-  }
-  .friend-time {
-    display: block;
-    font-size: 10px;
-    margin-left: 45px;
-  }
-  .self-time {
-    display: block;
-    font-size: 10px;
-  }
+  width: 100%;
+  height: 100%;
 
-  .avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: 100%;
-    margin-right: 4px;
+  .my-video {
+    height: 100vh;
+    width: 100%;
+    object-fit: cover;
+  }
+  .friend-video {
+    width: 420px;
+    height: 260px;
+    position: absolute;
+    background-color: red;
+    bottom: 0;
+    right: 0;
+    z-index: 100;
+    border-radius: 4px;
   }
 `;

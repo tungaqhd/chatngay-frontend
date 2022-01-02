@@ -21,6 +21,7 @@ import fetchWithToken from "../../hooks/useFetchToken";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
 import moment from "moment";
+import CallVideoDialog from "../common/CallVideoDialog";
 
 function Sidebar() {
   const [profile, setProfile] = useState();
@@ -29,6 +30,9 @@ function Sidebar() {
   const [listChat, setListChat] = useState();
   const [searchValue, setSearchValue] = useState("");
   const [searchUser, setSearchUser] = useState([]);
+  const [showCallDialog, setShowCallDialog] = useState(false);
+  const [nameCall, setNameCall] = useState("");
+  const [idCall, setIdCall] = useState(null);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -61,6 +65,9 @@ function Sidebar() {
     socket.emit("initChat", token);
     socket.on("callReceived", (id, name) => {
       console.log(`${name} is calling you on ${id}`);
+      setNameCall(name);
+      setIdCall(id);
+      setShowCallDialog(true);
     });
     socket.on("newMessages", async (message) => {
       if (message.chatId === chatId || (!chatId && frienData?._id)) {
@@ -137,15 +144,15 @@ function Sidebar() {
     <Container>
       <Left>
         <Logo>
-          <img src='/logo.svg' alt='logo' />
+          <img src="/logo.svg" alt="logo" />
         </Logo>
         <ClockIcon />
         <EyeIcon />
         <UsersIcon />
         <VideoCameraIcon />
         <div>
-          <a href='/profile'>
-            <img src='/user2.jpg' alt='user logo' />
+          <a href="/profile">
+            <img src="/user2.jpg" alt="user logo" />
           </a>
         </div>
       </Left>
@@ -157,19 +164,19 @@ function Sidebar() {
         <UserInfo>
           <img
             src={`https://api.chatngay.xyz/avatars/${profile?.avatar}`}
-            alt='large user'
+            alt="large user"
           />
           <h3>{profile?.name}</h3>
         </UserInfo>
 
         <Search>
           <input
-            type='text'
+            type="text"
             value={searchValue}
             onChange={inputSearchChangeHandler}
-            placeholder='search'
+            placeholder="search"
           />
-          <SearchIcon className='searchIcon' onClick={searchHandler} />
+          <SearchIcon className="searchIcon" onClick={searchHandler} />
         </Search>
         <p>
           <span>Last chats</span>
@@ -183,7 +190,7 @@ function Sidebar() {
             <Card onClick={() => setFriend(user)} key={user._id}>
               <img
                 src={`https://api.chatngay.xyz/avatars/${user.avatar}`}
-                alt='user'
+                alt="user"
               />
               <div>
                 <span>{user.username}</span>
@@ -203,7 +210,7 @@ function Sidebar() {
                 >
                   <img
                     src={`https://api.chatngay.xyz/avatars/${avatar}`}
-                    alt='user'
+                    alt="user"
                   />
                   <div>
                     <span>
@@ -225,7 +232,7 @@ function Sidebar() {
                 >
                   <img
                     src={`https://api.chatngay.xyz/avatars/${avatar}`}
-                    alt='user'
+                    alt="user"
                   />
                   <div>
                     <span>{username}</span>
@@ -237,6 +244,12 @@ function Sidebar() {
             }
           })}
       </Right>
+      <CallVideoDialog
+        open={showCallDialog}
+        setOpen={setShowCallDialog}
+        callName={nameCall}
+        idCall={idCall}
+      />
     </Container>
   );
 }
