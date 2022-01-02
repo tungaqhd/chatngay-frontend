@@ -1,20 +1,10 @@
 import LoginComponent from "../Components/Login";
-// import ThemeWrapper from "containers/themeWrapper";
-// import adminTheme from "styles/theme/materialAdmin";
-// import { createContainer } from "unstated-next";
-// import UseForm from "../hooks/useFormHook";
 import useFetch from "../hooks/useFetch";
-// import withFormStore from "../hocs/withFormStore";
-// import withAuthentication from "hocs/withAuthentication";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-// import { useDispatch } from "react-redux";
-// import actions from "stores/actions";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-// import { useRouter } from "next/router";
 import Swal from "sweetalert2";
-// import api_url from "../../../configs/app.json";
 import { StatusCode } from "status-code-enum";
 import { useHistory } from "react-router-dom";
 
@@ -41,8 +31,8 @@ const Login = () => {
   //   const dispatch = useDispatch();
   //   const router = useRouter();
   const { handleSubmit, control, formState } = useForm({
-    mode: "all",
-    reValidateMode: "onChange",
+    mode: "onBlur",
+    reValidateMode: "onBlur",
     criteriaMode: "firstError",
     shouldFocusError: false,
     resolver: yupResolver(schema),
@@ -54,7 +44,6 @@ const Login = () => {
   useEffect(() => {
     if (localStorage.getItem("token")) {
       history.replace("/");
-      // dispatch(actions.authentication.setAuthenticated());
     }
   }, []);
 

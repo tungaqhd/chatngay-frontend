@@ -1,6 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Swal from "sweetalert2";
+import Cropper from "react-easy-crop";
+import Dialog from "@mui/material/Dialog";
+// import DialogActions from "@mui/material/DialogActions";
+// import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slider from "@material-ui/core/Slider";
+import CameraEnhanceOutlinedIcon from "@mui/icons-material/CameraEnhanceOutlined";
 
 import {
   ClockIcon,
@@ -12,6 +19,52 @@ import fetchWithToken from "../hooks/useFetchToken";
 
 function Profile() {
   const [profile, setProfile] = useState();
+  const [image, setImage] = useState(null);
+  const inputRef = useRef();
+
+  const [newUserName, setNewUserName] = useState(profile?.username || "");
+  const [newFullName, setNewFullName] = useState(profile?.name || "");
+
+  useEffect(() => {
+    setNewUserName(profile?.username);
+    setNewFullName(profile?.name);
+  }, [profile]);
+
+  const [open, setOpen] = useState(true);
+  const [croppedArea, setCroppedArea] = useState(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+
+  const triggerFileSelectPopup = () => inputRef.current.click();
+  const onCropComplete = (croppedAreaPixels) => {
+    setCroppedArea(croppedAreaPixels);
+  };
+  const onSelectFile = (event) => {
+    setOpen(true);
+    if (event.target.files && event.target.files.length > 0) {
+      const reader = new FileReader();
+      reader.readAsDataURL(event.target.files[0]);
+      reader.addEventListener("load", () => {
+        setImage(reader.result);
+        setOpen(true);
+      });
+    }
+  };
+  const chooseImage = () => {
+    console.log(croppedArea);
+    console.log(image);
+    setOpen(false);
+    setImage(null);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    // setOpenCropImage(false);
+  };
+  const updateProfile = () => {
+    console.log(newUserName);
+    console.log(newFullName);
+  };
   useEffect(() => {
     async function fetchApi() {
       try {
@@ -44,25 +97,89 @@ function Profile() {
 
       <MainProfile>
         <div className="head">
-          <img src="/cover-photo4.jpg" alt="cover" />
-          <img src="/toc2.jpg" alt="pic" />
+          <img className="cover-photo" src="/cover-photo4.jpg" alt="cover" />
+          <img className="profile-photo" src="/toc2.jpg" alt="pic" />
+          <CameraEnhanceOutlinedIcon
+            className="camera"
+            onClick={triggerFileSelectPopup}
+          />
+          <input
+            type="file"
+            accept="image/*"
+            ref={inputRef}
+            onChange={onSelectFile}
+            style={{ display: "none" }}
+          />
         </div>
         <div className="info">
-          <div>
-            <span>Email: </span>
-            <span>{profile?.email}</span>
+          <h1>Profile Information</h1>
+          <div className="info_content">
+            <span>Email</span>
+            <input value={profile?.email} type="text" />
           </div>
-          <div>
-            <span>User name:</span>
-            <input type="text" value={profile?.username} />
+          <div className="info_content">
+            <span>User name</span>
+            <input
+              onChange={(e) => setNewUserName(e.target.value)}
+              value={newUserName}
+              type="text"
+            />
           </div>
-          <div>
-            <span>Full name:</span>
-            <input type="text" value={profile?.name} />
+          <div className="info_content">
+            <span>Full name</span>
+            <input
+              onChange={(e) => setNewFullName(e.target.value)}
+              value={newFullName}
+              type="text"
+            />
           </div>
-          <button className="edit">Edit profile</button>
+          <button onClick={updateProfile}>Update Profile</button>
         </div>
       </MainProfile>
+      {image ? (
+        <Dialog
+          fullWidth
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <div style={{ width: "100%", height: "60vh" }}>
+            <Cropper
+              image={image}
+              crop={crop}
+              zoom={zoom}
+              aspect={1}
+              onCropChange={setCrop}
+              onZoomChange={setZoom}
+              onCropComplete={onCropComplete}
+              className="test"
+            />
+            <Slider
+              min={1}
+              max={3}
+              step={0.1}
+              value={zoom}
+              onChange={(e, zoom) => setZoom(zoom)}
+            />
+          </div>
+          <div style={{ position: "absolute", bottom: "4px", right: "4px" }}>
+            <button
+              type="button"
+              // className="bg-white py-1 px-3 rounded-md"
+              style={{
+                padding: "6px 12px",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+              onClick={chooseImage}
+            >
+              Choose
+            </button>
+          </div>
+        </Dialog>
+      ) : null}
     </Container>
   );
 }
@@ -76,57 +193,83 @@ const Container = styled.div`
 const MainProfile = styled.div`
   position: relative;
   width: 100%;
-  height: 200px;
+  height: 280px;
   .head {
-    img {
+    .cover-photo {
       width: 100%;
-      height: 200px;
+      height: 280px;
     }
-    img:nth-child(2) {
-      width: 132px;
-      height: 132px;
+    .profile-photo {
+      width: 158px;
+      height: 158px;
       border-radius: 100%;
       position: absolute;
-      bottom: -66px;
-      left: 1rem;
+      bottom: -79px;
+      left: 1.4rem;
       border: 6px solid white;
-      /* border-color: white; */
       overflow: hidden;
       object-fit: cover;
     }
+    .camera {
+      position: absolute;
+      bottom: -11px;
+      left: 96px;
+      z-index: 120;
+      color: white;
+      opacity: 0.4;
+    }
   }
   .info {
-    position: relative;
-    margin-top: 5rem;
-    margin-left: 2rem;
     display: flex;
+    height: 100%;
+    margin: 1rem auto;
     flex-direction: column;
-    align-items: center;
-    border: 1px solid black;
-    margin: 6rem 20vw;
-    padding: 2rem 4rem;
-
-    .edit {
-      padding: 10px 6px;
-      border-radius: 4px;
-      background-color: #add9e6;
+    width: 60vw;
+    h1 {
+      margin: 2rem auto 3rem;
+      color: #add9e6;
     }
-
-    > div {
+    button {
+      padding: 0.8rem 0.8rem;
+      width: 10rem;
+      font-weight: 600;
+      margin-left: auto;
+      border-radius: 4px;
+      border: 2px solid #add9e6;
+      border-color: #add9e6;
+      background-color: white;
+      color: #add9e6;
+      cursor: pointer;
       font-size: 18px;
-      font-weight: 500;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-
-      span {
-        min-width: 6rem;
+      :hover {
+        background-color: #add9e6;
+        color: white;
       }
     }
-    input {
-      padding: 0.4rem 0.6rem;
-      margin-left: 1rem;
+    .info_content {
+      display: flex;
       width: 100%;
+      align-items: center;
+      color: rgba(113, 128, 150, 0.9);
+      margin-bottom: 2.4rem;
+
+      span {
+        width: 12rem;
+        font-weight: 500;
+        justify-content: flex-end;
+        font-size: 22px;
+      }
+      input {
+        width: 100%;
+        color: rgba(113, 128, 150, 0.9);
+        font-size: 18px;
+        padding: 1rem 1.4rem;
+        outline: none;
+        border-radius: 4px;
+        margin-left: 2rem;
+        border: 2px solid #add9e6;
+        border-color: #add9e6;
+      }
     }
   }
 `;

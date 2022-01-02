@@ -146,6 +146,7 @@ function Sidebar() {
         <Logo>
           <img src="/logo.svg" alt="logo" />
         </Logo>
+
         <ClockIcon />
         <EyeIcon />
         <UsersIcon />

@@ -72,7 +72,7 @@ const Container = styled.div`
     border-radius: 10px;
   }
   .reply-content {
-    background-color: white;
+    color: white;
   }
   .friend-time {
     display: block;

@@ -37,38 +37,6 @@ function Message({ data, message }) {
 
 export default Message;
 
-// const Container = styled.div`
-// .avatar {
-//   width: 42px;
-//   height: 42px;
-//   border-radius: 100%;
-//   margin-right: 4px;
-// }
-
-//   display: flex;
-//   align-items: center;
-//   margin-bottom: 16px;
-//   margin-left: 10px;
-
-//   .file-info {
-//     background-color: lightgray;
-//     padding: 4px 8px;
-//     max-width: 10rem;
-//     border-radius: 8px;
-//     display: flex;
-//     svg {
-//       width: 32px;
-//       height: 32px;
-//       margin-right: 4px;
-//     }
-//   }
-//   img {
-//     width: 42px;
-//     height: 42px;
-//     border-radius: 100%;
-//     margin-right: 4px;
-//   }
-// `;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
