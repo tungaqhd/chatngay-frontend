@@ -9,7 +9,7 @@ import {
 import { io } from "socket.io-client";
 import {
   ClockIcon,
-  EyeIcon,
+  FolderIcon,
   UsersIcon,
   VideoCameraIcon,
   ChevronLeftIcon,
@@ -23,7 +23,7 @@ import _ from "lodash";
 import moment from "moment";
 import CallVideoDialog from "../common/CallVideoDialog";
 
-function Sidebar() {
+function Sidebar({setShowFolder}) {
   const [profile, setProfile] = useState();
   const chatId = useSelector(chatIdMessage);
   const frienData = useSelector(friend);
@@ -146,9 +146,8 @@ function Sidebar() {
         <Logo>
           <img src="/logo.svg" alt="logo" />
         </Logo>
-
+        <FolderIcon onClick={setShowFolder} style={{ cursor: "pointer"}} />
         <ClockIcon />
-        <EyeIcon />
         <UsersIcon />
         <VideoCameraIcon />
         <div>
