@@ -48,7 +48,7 @@ function Message({ message, match }) {
       if (!peer.current) {
         peer.current = new Peer(profile._id, {
           path: "/peerjs",
-          host: "localhost",
+          host: process.env.REACT_APP_PEER_HOST,
           port: "5000",
         });
       }
