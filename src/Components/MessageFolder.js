@@ -14,21 +14,21 @@ function Message({ data, message }) {
   const classN = isSelfMess ? "checkMessage" : "friend-mess";
   return (
     <Container className={classN}>
-      <div className="msg-data">
+      <div className='msg-data'>
         {!isSelfMess && (
           <img
-            className="avatar"
-            src={`https://api.chatngay.xyz/avatars/${friendData.avatar}`}
-            alt=""
+            className='avatar'
+            src={`${process.env.REACT_APP_SERVER}/avatars/${friendData.avatar}`}
+            alt=''
           />
         )}
-        <a href={`https://api.chatngay.xyz/files/${data.fileName}`}>
-          <div className="file-info">
+        <a href={`${process.env.REACT_APP_SERVER}/files/${data.fileName}`}>
+          <div className='file-info'>
             <FolderIcon />
             <div>{data.originalFilename}</div>
           </div>
         </a>
-        <img src="/reply1.png" alt="s" className="reply" />
+        <img src='/reply1.png' alt='s' className='reply' />
       </div>
       <p className={timeClass}>{moment(message.createdAt).format("hh:mm")}</p>
     </Container>
@@ -47,7 +47,6 @@ const Container = styled.div`
     .reply {
       height: 18px;
       margin: 18px 0 0 12px;
-      
     }
   }
   .msg-content {

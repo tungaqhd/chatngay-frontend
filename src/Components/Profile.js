@@ -1,13 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import styled from "styled-components";
 import Swal from "sweetalert2";
-import Cropper from "react-easy-crop";
-import Dialog from "@mui/material/Dialog";
-// import DialogActions from "@mui/material/DialogActions";
-// import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Slider from "@material-ui/core/Slider";
-import CameraEnhanceOutlinedIcon from "@mui/icons-material/CameraEnhanceOutlined";
 
 import {
   ClockIcon,
@@ -19,8 +13,7 @@ import fetchWithToken from "../hooks/useFetchToken";
 
 function Profile() {
   const [profile, setProfile] = useState();
-  const [image, setImage] = useState(null);
-  const inputRef = useRef();
+  const [avatar, setAvatar] = useState(null);
 
   const [newUserName, setNewUserName] = useState(profile?.username || "");
   const [newFullName, setNewFullName] = useState(profile?.name || "");
@@ -30,40 +23,34 @@ function Profile() {
     setNewFullName(profile?.name);
   }, [profile]);
 
-  const [open, setOpen] = useState(true);
-  const [croppedArea, setCroppedArea] = useState(null);
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-
-  const triggerFileSelectPopup = () => inputRef.current.click();
-  const onCropComplete = (croppedAreaPixels) => {
-    setCroppedArea(croppedAreaPixels);
+  const onSelectFile = (e) => {
+    setAvatar(e.target.files[0]);
   };
-  const onSelectFile = (event) => {
-    setOpen(true);
-    if (event.target.files && event.target.files.length > 0) {
-      const reader = new FileReader();
-      reader.readAsDataURL(event.target.files[0]);
-      reader.addEventListener("load", () => {
-        setImage(reader.result);
-        setOpen(true);
-      });
+
+  const updateProfile = async () => {
+    const token = localStorage.getItem("token");
+    const url = `${process.env.REACT_APP_API_KEY}/user/`;
+    const formData = new FormData();
+    formData.append("avatar", avatar);
+    formData.append("username", newUserName);
+    formData.append("name", newFullName);
+    const config = {
+      headers: {
+        "content-type": "multipart/form-data",
+        authorization: "Bearer " + token,
+      },
+    };
+    await axios.post(url, formData, config);
+
+    try {
+      const resProfile = await fetchWithToken(
+        `${process.env.REACT_APP_API_KEY}/user/me`
+      );
+      const userData = await resProfile.json();
+      setProfile(userData);
+    } catch (error) {
+      Swal.fire(`Login timeout. Please login again`);
     }
-  };
-  const chooseImage = () => {
-    console.log(croppedArea);
-    console.log(image);
-    setOpen(false);
-    setImage(null);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    // setOpenCropImage(false);
-  };
-  const updateProfile = () => {
-    console.log(newUserName);
-    console.log(newFullName);
   };
   useEffect(() => {
     async function fetchApi() {
@@ -84,102 +71,58 @@ function Profile() {
     <Container>
       <Left>
         <Logo>
-          <img src="/logo.svg" alt="logo" />
+          <img src='/logo.svg' alt='logo' />
         </Logo>
         <ClockIcon />
         <EyeIcon />
         <UsersIcon />
         <VideoCameraIcon />
         <div>
-          <img src="/user2.jpg" alt="user logo" />
+          <img
+            src={`${process.env.REACT_APP_SERVER}/avatars/${profile?.avatar}`}
+            alt='user logo'
+          />
         </div>
       </Left>
 
       <MainProfile>
-        <div className="head">
-          <img className="cover-photo" src="/cover-photo4.jpg" alt="cover" />
-          <img className="profile-photo" src="/toc2.jpg" alt="pic" />
-          <CameraEnhanceOutlinedIcon
-            className="camera"
-            onClick={triggerFileSelectPopup}
-          />
-          <input
-            type="file"
-            accept="image/*"
-            ref={inputRef}
-            onChange={onSelectFile}
-            style={{ display: "none" }}
+        <div className='head'>
+          <img className='cover-photo' src='/cover-photo4.jpg' alt='cover' />
+          <img
+            className='profile-photo'
+            src={`${process.env.REACT_APP_SERVER}/avatars/${profile?.avatar}`}
+            alt='pic'
           />
         </div>
-        <div className="info">
+        <div className='info'>
           <h1>Profile Information</h1>
-          <div className="info_content">
-            <span>Email</span>
-            <input value={profile?.email} type="text" />
+          <div className='info_content'>
+            <span>Avatar</span>
+            <input type='file' accept='image/*' onChange={onSelectFile} />
           </div>
-          <div className="info_content">
-            <span>User name</span>
+          <div className='info_content'>
+            <span>Email</span>
+            <input value={profile?.email} type='text' disabled />
+          </div>
+          <div className='info_content'>
+            <span>Username</span>
             <input
               onChange={(e) => setNewUserName(e.target.value)}
               value={newUserName}
-              type="text"
+              type='text'
             />
           </div>
-          <div className="info_content">
+          <div className='info_content'>
             <span>Full name</span>
             <input
               onChange={(e) => setNewFullName(e.target.value)}
               value={newFullName}
-              type="text"
+              type='text'
             />
           </div>
           <button onClick={updateProfile}>Update Profile</button>
         </div>
       </MainProfile>
-      {image ? (
-        <Dialog
-          fullWidth
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <div style={{ width: "100%", height: "60vh" }}>
-            <Cropper
-              image={image}
-              crop={crop}
-              zoom={zoom}
-              aspect={1}
-              onCropChange={setCrop}
-              onZoomChange={setZoom}
-              onCropComplete={onCropComplete}
-              className="test"
-            />
-            <Slider
-              min={1}
-              max={3}
-              step={0.1}
-              value={zoom}
-              onChange={(e, zoom) => setZoom(zoom)}
-            />
-          </div>
-          <div style={{ position: "absolute", bottom: "4px", right: "4px" }}>
-            <button
-              type="button"
-              // className="bg-white py-1 px-3 rounded-md"
-              style={{
-                padding: "6px 12px",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-              }}
-              onClick={chooseImage}
-            >
-              Choose
-            </button>
-          </div>
-        </Dialog>
-      ) : null}
     </Container>
   );
 }

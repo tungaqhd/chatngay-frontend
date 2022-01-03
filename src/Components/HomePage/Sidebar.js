@@ -23,7 +23,7 @@ import _ from "lodash";
 import moment from "moment";
 import CallVideoDialog from "../common/CallVideoDialog";
 
-function Sidebar({setShowFolder}) {
+function Sidebar({ setShowFolder }) {
   const [profile, setProfile] = useState();
   const chatId = useSelector(chatIdMessage);
   const frienData = useSelector(friend);
@@ -144,15 +144,18 @@ function Sidebar({setShowFolder}) {
     <Container>
       <Left>
         <Logo>
-          <img src="/logo.svg" alt="logo" />
+          <img src='/logo.svg' alt='logo' />
         </Logo>
-        <FolderIcon onClick={setShowFolder} style={{ cursor: "pointer"}} />
+        <FolderIcon onClick={setShowFolder} style={{ cursor: "pointer" }} />
         <ClockIcon />
         <UsersIcon />
         <VideoCameraIcon />
         <div>
-          <a href="/profile">
-            <img src="/user2.jpg" alt="user logo" />
+          <a href='/profile'>
+            <img
+              src={`${process.env.REACT_APP_SERVER}/avatars/${profile?.avatar}`}
+              alt='user logo'
+            />
           </a>
         </div>
       </Left>
@@ -163,20 +166,20 @@ function Sidebar({setShowFolder}) {
         </div>
         <UserInfo>
           <img
-            src={`https://api.chatngay.xyz/avatars/${profile?.avatar}`}
-            alt="large user"
+            src={`${process.env.REACT_APP_SERVER}/avatars/${profile?.avatar}`}
+            alt='large user'
           />
           <h3>{profile?.name}</h3>
         </UserInfo>
 
         <Search>
           <input
-            type="text"
+            type='text'
             value={searchValue}
             onChange={inputSearchChangeHandler}
-            placeholder="search"
+            placeholder='search'
           />
-          <SearchIcon className="searchIcon" onClick={searchHandler} />
+          <SearchIcon className='searchIcon' onClick={searchHandler} />
         </Search>
         <p>
           <span>Last chats</span>
@@ -189,8 +192,8 @@ function Sidebar({setShowFolder}) {
           searchUser?.map((user) => (
             <Card onClick={() => setFriend(user)} key={user._id}>
               <img
-                src={`https://api.chatngay.xyz/avatars/${user.avatar}`}
-                alt="user"
+                src={`${process.env.REACT_APP_SERVER}/avatars/${user.avatar}`}
+                alt='user'
               />
               <div>
                 <span>{user.username}</span>
@@ -209,8 +212,8 @@ function Sidebar({setShowFolder}) {
                   onClick={() => getChatGroup(chat._id, chat.user2[0])}
                 >
                   <img
-                    src={`https://api.chatngay.xyz/avatars/${avatar}`}
-                    alt="user"
+                    src={`${process.env.REACT_APP_SERVER}/avatars/${avatar}`}
+                    alt='user'
                   />
                   <div>
                     <span>
@@ -231,8 +234,8 @@ function Sidebar({setShowFolder}) {
                   onClick={() => getChatGroup(chat._id, chat.user1[0])}
                 >
                   <img
-                    src={`https://api.chatngay.xyz/avatars/${avatar}`}
-                    alt="user"
+                    src={`${process.env.REACT_APP_SERVER}/avatars/${avatar}`}
+                    alt='user'
                   />
                   <div>
                     <span>{username}</span>

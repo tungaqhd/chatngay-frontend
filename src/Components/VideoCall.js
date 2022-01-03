@@ -1,18 +1,15 @@
-import React, { useEffect, createRef, useState, useRef } from "react";
+import React, { useEffect, createRef, useRef } from "react";
 import { io } from "socket.io-client";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { messageActions, selectProfile } from "../features/messageSlice";
-import { friend } from "../features/messageSlice";
 import Peer from "peerjs";
 import fetchWithToken from "../hooks/useFetchToken";
 import { useParams } from "react-router-dom";
 function Message({ message, match }) {
   const dispatch = useDispatch();
-  const [profile, setProfile] = useState();
   const myVideo = createRef();
   const friendVideo = createRef();
-  const friendId = useParams().friendId;
+  const chatId = useParams().chatId;
 
   let peer = useRef(null);
   let socket = useRef(null);
@@ -33,22 +30,20 @@ function Message({ message, match }) {
     video.srcObject = stream;
     video.play();
   };
-  const connectToNewUser = (userId, stream) => {
-    const call = peer.current.call(userId, stream);
-    call.on("stream", (userVideoStream) => {
-      friendVideo.current.srcObject = userVideoStream;
-      friendVideo.current.play();
-    });
-  };
 
   useEffect(() => {
     const init = async () => {
       if (!socket.current) {
-        console.count();
         socket.current = io(process.env.REACT_APP_SOCKET);
       }
       const profile = await fetchApi();
-      const token = localStorage.getItem("token");
+
+      const fr = await fetchWithToken(
+        `${process.env.REACT_APP_API_KEY}/chat/friend/${chatId}`
+      );
+      const frData = await fr.json();
+      const friend = frData.id;
+      console.log(friend);
       if (!peer.current) {
         peer.current = new Peer(profile._id, {
           path: "/peerjs",
@@ -57,9 +52,7 @@ function Message({ message, match }) {
         });
       }
       peer.current.on("open", (id) => {
-        console.log(profile);
-        console.log("join");
-        socket.current.emit("join-room", friendId, profile._id, "user");
+        socket.current.emit("join-room", chatId, profile._id, "user");
       });
 
       navigator.mediaDevices
@@ -71,46 +64,30 @@ function Message({ message, match }) {
           addVideoStream(myVideo.current, stream);
 
           peer.current.on("call", (call) => {
-            console.log("nhận call");
             call.answer(stream);
             call.on("stream", (userVideoStream) => {
-              console.log("on call");
               addVideoStream(friendVideo.current, userVideoStream);
             });
           });
 
-          if (profile._id === "61932b36a625dccac7eb6ca4") {
-            connectToNewUser("61933a4ee06777e5bf25a226", stream);
-          } else {
-            connectToNewUser("61932b36a625dccac7eb6ca4", stream);
-          }
-
-          // socket.current.on("user-connected", (userId) => {
-          //   console.log("connect to" + userId);
-          //   connectToNewUser(userId, stream);
-          // });
+          const call = peer.current.call(friend, stream);
+          call.on("stream", (userVideoStream) => {
+            friendVideo.current.srcObject = userVideoStream;
+            friendVideo.current.play();
+          });
         });
-
-      // const call = peer.call(friendId, stream);
-      // peer.on("call", (call) => {
-      //   call.answer(stream);
-      //   const video = document.createElement("video");
-      //   call.on("stream", (userVideoStream) => {
-      //     addVideoStream(video, userVideoStream);
-      //   });
-      // });
     };
     init();
 
     return () => {
       socket.current.emit("forceDisconnect");
     };
-  }, [dispatch, connectToNewUser, friendId, friendVideo, myVideo]);
+  }, [dispatch, chatId, friendVideo, myVideo]);
 
   return (
     <Container>
-      <video className="my-video" ref={myVideo}></video>
-      <video className="friend-video" ref={friendVideo}></video>
+      <video className='my-video' ref={myVideo}></video>
+      <video className='friend-video' ref={friendVideo}></video>
       <button></button>
     </Container>
   );

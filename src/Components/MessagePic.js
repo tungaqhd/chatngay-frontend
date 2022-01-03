@@ -12,20 +12,20 @@ function MessagePic({ data, message }) {
   const classN = isSelfMess ? "checkMessage" : "friend-mess";
   return (
     <Container className={classN}>
-      <div className="msg-data">
+      <div className='msg-data'>
         {!isSelfMess && (
           <img
-            className="avatar"
-            src={`https://api.chatngay.xyz/avatars/${friendData.avatar}`}
-            alt=""
+            className='avatar'
+            src={`${process.env.REACT_APP_SERVER}/avatars/${friendData.avatar}`}
+            alt=''
           />
         )}
         <img
-          className="img-msg"
-          src={`https://api.chatngay.xyz/files/${data}`}
-          alt=""
+          className='img-msg'
+          src={`${process.env.REACT_APP_SERVER}/files/${data}`}
+          alt=''
         />
-        <img src="/reply1.png" alt="s" className="reply" />
+        <img src='/reply1.png' alt='s' className='reply' />
       </div>
       <p className={timeClass}>{moment(message.createdAt).format("hh:mm")}</p>
     </Container>

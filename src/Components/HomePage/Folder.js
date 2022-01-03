@@ -22,8 +22,8 @@ function Folder({ showFolder }) {
             </div>
             <UserInfo>
               <img
-                src={`https://api.chatngay.xyz/avatars/${friendData?.avatar}`}
-                alt="large user"
+                src={`${process.env.REACT_APP_SERVER}/avatars/${friendData?.avatar}`}
+                alt='large user'
               />
               <h3>{friendData?.username}</h3>
               <span>{friend?.isOnline ? "Online" : "Offline"}</span>
@@ -38,7 +38,7 @@ function Folder({ showFolder }) {
                 <div>25 files</div>
               </div>
             </Box>
-            <p className="fileType">
+            <p className='fileType'>
               <span>File type</span>
               <DotsVerticalIcon />
             </p>
@@ -187,13 +187,13 @@ const Card = styled.div`
     height: 18px;
     border-radius: 0.8rem;
     &:first-child {
-        padding: 0.8rem;
-        background-color: lightgreen;
+      padding: 0.8rem;
+      background-color: lightgreen;
     }
   }
 
   div {
-      display: flex;
-      flex-direction: column;
+    display: flex;
+    flex-direction: column;
   }
 `;

@@ -27,7 +27,7 @@ function Message({ message }) {
       <div className='msg-data'>
         {!isSelfMess && (
           <img
-            src={`https://api.chatngay.xyz/avatars/${friendData.avatar}`}
+            src={`${process.env.REACT_APP_SERVER}/avatars/${friendData.avatar}`}
             alt=''
             className='avatar'
           />
