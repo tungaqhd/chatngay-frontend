@@ -49,7 +49,7 @@ function Message({ message, match }) {
         peer.current = new Peer(profile._id, {
           path: "/peerjs",
           host: process.env.REACT_APP_PEER_HOST,
-          port: "5000",
+          port: process.env.REACT_APP_PEER_PORT,
         });
       }
       peer.current.on("open", (id) => {
